@@ -1,0 +1,42 @@
+# Source
+src/
+
+# Development files
+.gitignore
+.eslintrc
+.eslintignore
+eslint.config.js
+
+# TypeScript configuration
+tsconfig.json
+
+# Tests
+tests/
+*.test.ts
+*.spec.ts
+
+# Documentation
+docs/
+
+# IDE files
+.vscode/
+.idea/
+
+# Logs
+logs/
+*.log
+
+# Build artifacts
+coverage/
+
+# Dependencies
+node_modules/
+
+# Lock files
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Misc
+.DS_Store
+Thumbs.db
