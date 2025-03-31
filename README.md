@@ -58,6 +58,7 @@ Configure ableton-copilot-mcp in Cursor:
 "ableton-js-mcp": {
     "command": "npx",
     "args": [
+        "-y",
         "ableton-copilot-mcp"
     ]
 }

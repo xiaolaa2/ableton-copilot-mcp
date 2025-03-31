@@ -58,6 +58,7 @@
 "ableton-js-mcp": {
     "command": "npx",
     "args": [
+        "-y",
         "ableton-copilot-mcp"
     ]
 }
