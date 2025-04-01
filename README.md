@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
 </div>
 
-> An MCP (Model Context Protocol) server based on [ableton-js](https://github.com/leolabs/ableton-js) for real-time interaction and control with Ableton Live.
+> An MCP (Model Context Protocol) server based on [ableton-js](https://github.com/leolabs/ableton-js) for real-time interaction and control with Ableton Live, dedicated to assisting music producers in music creation.
 
 ## 🚀 Features
 
@@ -20,14 +20,17 @@
 ### 🎹 Track Management
 - Get all clips in a track
 - Create empty MIDI clips
-- Set track properties (volume, pan, mute, color, name, etc.)
+- Set track properties (mute, color, name, arm, solo, etc.)
 - Duplicate MIDI clips to specified tracks
 
 ### 🎼 Clip Operations
 - Get clips in the piano roll view
 - Get and manage all notes in a clip
 - Add, delete, and replace notes in clips
-- Set clip properties (name, color, etc.)
+- Set clip properties (name, color, looping, loop_start, loop_end, etc.)
+
+### 🎧 Audio Operations
+- Supports recording track content based on time range
 
 ## 📥 Installation
 
@@ -65,6 +68,8 @@ Configure ableton-copilot-mcp in Cursor:
 ```
 
 ## ✅ Compatibility Testing
+
+Compatibility primarily depends on the version support of the [ableton-js](https://github.com/leolabs/ableton-js) library.
 
 | Ableton Live Version | Test Status |
 | -------------------- | ----------- |
