@@ -1,10 +1,11 @@
 import { tool } from '../mcp/decorators/decorator.js'
-import { ableton } from '../main.js'
 import { z } from 'zod'
 import { Note } from 'ableton-js/util/note.js'
 import { NOTE, ClipSettableProp } from '../types/types.js'
 import { modifyClipProp } from '../utils/obj-utils.js'
 import { getClipById, Result } from '../utils/common.js'
+import { ableton } from '../ableton.js'
+import { removeAllNotes } from '../utils/clip-utils.js'
 
 async function getDetailClip() {
     const detailClip = await ableton.song.view.get('detail_clip')
@@ -58,9 +59,7 @@ class ClipTools {
     })
     async removeALlClipNotes(clip_id: string) {
         const clip = getClipById(clip_id)
-        await clip.removeNotes(0, 0, 9999, 127)
-        // this way can't work i don't know why
-        // await detailClip.removeNotesExtended(0, 0, 9999, 127)
+        await removeAllNotes(clip)
         return Result.ok()
     }
 
@@ -88,6 +87,7 @@ class ClipTools {
     })
     async replaceAllDetailClipNotes(notes: Note[], clip_id: string) {
         const clip = getClipById(clip_id)
+        await clip.selectAllNotes()
         await clip.replaceSelectedNotes(notes)
         return Result.ok()
     }
@@ -106,6 +106,70 @@ class ClipTools {
     ) {
         const clip = getClipById(clip_id)
         await modifyClipProp(clip, property)
+        return Result.ok()
+    }
+
+    @tool({
+        name: 'crop_clip',
+        description: `Crops the clip. The region that is cropped depends on whether the clip is looped or not. 
+            If looped, the region outside of the loop is removed. If not looped, 
+            the region outside the start and end markers is removed.`,
+        paramsSchema: {
+            clip_id: z.string(),
+        }
+    })
+    async cropClip(clip_id: string) {
+        const clip = getClipById(clip_id)
+        await clip.crop()
+        return Result.ok()
+    }
+
+    @tool({
+        name: 'duplicate_clip_loop',
+        description: `Makes the loop twice as long and duplicates notes and envelopes. 
+        Duplicates the clip start/end range if the clip is not looped.`,
+        paramsSchema: {
+            clip_id: z.string(),
+        }
+    })
+    async duplicateLoop(clip_id: string) {
+        const clip = getClipById(clip_id)
+        await clip.duplicateLoop()
+        return Result.ok()
+    }
+
+    @tool({
+        name: 'duplicate_clip_region',
+        description: `Duplicates the notes in the specified region to the destination_time.
+            Only notes of the specified pitch are duplicated if pitch is not -1.
+            If the transposition_amount is not 0, the notes in the region will be
+            transposed by the transposition_amount of semitones.
+            Raises an error on audio clips..`,
+        paramsSchema: {
+            clip_id: z.string(),
+            region_start: z.number(),
+            region_end: z.number(),
+            destination_time: z.number(),
+            pitch: z.number(),
+            transposition_amount: z.number(),
+        }
+    })
+    async duplicateRegion(
+        clip_id: string,
+        region_start: number,
+        region_end: number,
+        destination_time: number,
+        pitch: number,
+        transposition_amount: number
+    ) {
+        const clip = getClipById(clip_id)
+        await clip.duplicateRegion(
+            region_start,
+            region_end,
+            destination_time,
+            pitch,
+            transposition_amount
+        )
         return Result.ok()
     }
 }

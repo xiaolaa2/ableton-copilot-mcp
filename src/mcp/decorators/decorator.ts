@@ -1,7 +1,8 @@
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
 import { CallToolResult } from '@modelcontextprotocol/sdk/types.js'
 import { ZodRawShape } from 'zod'
-import { logger } from '../../main.js'
+import { handleException } from '../error-handler.js'
+import { ableton } from '../../ableton.js'
 
 type ToolFactory = (server: McpServer) => void
 
@@ -17,6 +18,9 @@ async function processToolReq(
     originalFunc: (...args: any[]) => object
 ): Promise<CallToolResult | Promise<CallToolResult>> {
     try {
+        if (!ableton.isConnected()) {
+            throw new Error('Ableton is not connected, please check if Ableton is running.')
+        }
         const args = argsObj ? Object.values(argsObj) : []
         // @todo: 根据传进来的类型定义来调整参数顺序
         const ans = await originalFunc(...args)
@@ -30,16 +34,7 @@ async function processToolReq(
         }
     }
     catch (error) {
-        logger.error((error as Error).toString())
-        return {
-            isError: true,
-            content: [
-                {
-                    type: 'text',
-                    text: (error as Error).toString(),
-                }
-            ]
-        }
+        return handleException(error as Error)
     }
 }
 

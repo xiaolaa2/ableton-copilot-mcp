@@ -1,8 +1,8 @@
 import { Namespace } from 'ableton-js/ns/index.js'
 import { RawTrack, Track } from 'ableton-js/ns/track.js'
-import { ableton } from '../main.js'
 import { z } from 'zod'
 import { Clip, RawClip } from 'ableton-js/ns/clip.js'
+import { ableton } from '../ableton.js'
 
 export function modifyObjProps<T extends Namespace<any, any, SP, any>, SP>
     (

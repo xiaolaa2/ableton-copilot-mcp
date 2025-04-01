@@ -1,11 +1,11 @@
 import { z } from 'zod'
-import { ableton } from '../main.js'
 import { tool } from '../mcp/decorators/decorator.js'
 import { commomProp, TrackSettableProp } from '../types/types.js'
 import { Track } from 'ableton-js/ns/track.js'
 import { modifyTrackProp } from '../utils/obj-utils.js'
 import { getRawTrackById, getTrackById, Result } from '../utils/common.js'
 import { Clip } from 'ableton-js/ns/clip.js'
+import { ableton } from '../ableton.js'
 
 class TrackTools {
 
@@ -106,6 +106,19 @@ class TrackTools {
         const track = getTrackById(track_id)
         await track.duplicateClipToArrangement(clip_id, time)
         return Result.ok()
+    }
+
+    @tool({
+        name: 'get_track_available_input_routings',
+        description: 'get track available input routings',
+        paramsSchema: {
+            track_id: z.string(),
+        }
+    })
+    async getTrackAvailableInputRoutings(track_id: string) {
+        const track = getTrackById(track_id)
+        const input_routings = await track.get('available_input_routing_types')
+        return input_routings.map((routing) => routing.display_name)
     }
 }
 

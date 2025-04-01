@@ -20,7 +20,7 @@ export default defineConfig([
       'function-paren-newline': ['error', 'multiline'],
       'function-call-argument-newline': ['error', 'consistent'],
       'array-element-newline': ['error', 'consistent'],
-      'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }]
+      'object-property-newline': ['error', { allowAllPropertiesOnSameLine: true }],
     }
   }
 ],)

@@ -10,7 +10,7 @@ export async function startServer() {
     }, {
         capabilities: {
             tools: {},
-            resources: {},
+            // resources: {},
         }
     })
 

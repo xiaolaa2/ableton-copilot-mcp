@@ -1,10 +1,11 @@
 import { z } from 'zod'
-import { ableton } from '../main.js'
 import { tool } from '../mcp/decorators/decorator.js'
-import { TrackType, ZodTrackType } from '../types/types.js'
+import { commomProp, TrackType, ZodTrackType } from '../types/types.js'
 import { Track } from 'ableton-js/ns/track.js'
 import { Result } from '../utils/common.js'
 import { getSongInfo } from '../utils/obj-utils.js'
+import { recordByTimeRange } from '../utils/record-utils.js'
+import { ableton } from '../ableton.js'
 
 class SongTools {
 
@@ -90,6 +91,23 @@ class SongTools {
     async duplicateTrack(index: number) {
         await ableton.song.duplicateTrack(index)
         return Result.ok()
+    }
+
+    @tool({
+        name: 'record_by_time_range',
+        description: `Opens Ableton's audio record button and starts playback from start_time to end_time. 
+        Before recording, please:
+        ENSURE: 
+        1. Set the recording track to record mode
+        2. Set the recording track's input routing to Resample or a specific audio track/input routing
+        3. After recording, disable the track's record mode`,
+        paramsSchema: {
+            start_time: commomProp.time,
+            end_time: z.number().describe('[int] end time of record'),
+        }
+    })
+    async recordAudio(start_time: number, end_time: number) {
+        return recordByTimeRange(ableton.song, start_time, end_time)
     }
 
     // @tool({

@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="许可证">
 </div>
 
-> 一个基于 [ableton-js](https://github.com/leolabs/ableton-js) 搭建的 MCP（Model Context Protocol）服务器，用于与 Ableton Live 进行实时交互和控制。
+> 一个基于 [ableton-js](https://github.com/leolabs/ableton-js) 搭建的 MCP（Model Context Protocol）服务器，用于与 Ableton Live 进行实时交互和控制，致力于辅助音乐制作人进行音乐制作。
 
 ## 🚀 功能特性
 
@@ -15,22 +15,23 @@
 - 获取歌曲基本信息（根音、音阶名称、速度、歌曲长度等）
 - 获取所有音轨列表
 - 创建 MIDI、音频和返送音轨
-- 删除和复制音轨
+- 删除、复制音轨
 
 ### 🎹 音轨管理（Track）
 - 获取音轨中的所有片段
-- 创建空白 MIDI 片段
-- 设置音轨属性（音量、声像、静音、颜色、名称等）
+- 在轨道中创建空白 MIDI 片段
+- 设置音轨属性（静音、颜色、名称等）
 - 复制 MIDI 片段到指定音轨
 
 ### 🎼 片段操作（Clip）
 - 获取钢琴卷帘视图中的片段
-- 获取和管理片段中的所有音符
-- 添加、删除和替换片段中的音符
+- 获取、添加、删除和替换片段中的音符
 - 设置片段属性（名称、颜色等）
 
-## 📥 安装准备
+### 🎧 其它操作（Audio）
+- 支持对轨道内容进行录制
 
+## 📥 安装准备
 1. 安装 **Node.js**：确保 npx 命令可以正常运行，建议前往 [Node.js 官网](https://nodejs.org/) 安装最新的稳定版本
 2. 安装 **MIDI Remote Scripts**：按照 [ableton-js](https://github.com/leolabs/ableton-js) 项目说明将 AbletonJS 的 MIDI Remote Scripts 安装到您的 Ableton Live 中
 
