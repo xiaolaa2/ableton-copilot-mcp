@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2024-07-15
+
+### Changed
+- Refactor: Restructured Ableton initialization logic by moving it from main.ts to ableton.ts for better maintainability
+- Added recording utility functions that support recording by time range and clip trimming
+- Introduced async-mutex dependency to ensure thread safety during recording
+- Fixed type definitions and comments to improve code readability
+- Fixed incorrect track and clip color settings
+
 ## [0.2.0] - 2024-03-30
 
 ### Changed
