@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.0] - 2024-07-15
+## [0.3.1] - 2025-04-02
+
+### Changed
+- Replace old publish scripts with new release scripts in package.json
+- Add a new GitHub Actions workflow for automated npm publishing on version tags
+- Update song-tools.ts documentation for clarity
+
+## [0.3.0] - 2025-04-01
 
 ### Changed
 - Refactor: Restructured Ableton initialization logic by moving it from main.ts to ableton.ts for better maintainability
@@ -11,7 +18,7 @@ All notable changes to this project will be documented in this file.
 - Fixed type definitions and comments to improve code readability
 - Fixed incorrect track and clip color settings
 
-## [0.2.0] - 2024-03-30
+## [0.2.0] - 2025-03-30
 
 ### Changed
 - Refactor: Update tool names to use underscores instead of hyphens

@@ -96,11 +96,11 @@ class SongTools {
     @tool({
         name: 'record_by_time_range',
         description: `Opens Ableton's audio record button and starts playback from start_time to end_time. 
-        Before recording, please:
-        ENSURE: 
-        1. Set the recording track to record mode
-        2. Set the recording track's input routing to Resample or a specific audio track/input routing
-        3. After recording, disable the track's record mode`,
+            Before recording, please:
+            ENSURE: 
+            1. Set the recording track to record mode
+            2. Set the recording track's input routing to Resample or a specific audio track/input routing
+            3. After recording, disable the track's record mode`,
         paramsSchema: {
             start_time: commomProp.time,
             end_time: z.number().describe('[int] end time of record'),
