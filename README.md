@@ -7,7 +7,13 @@
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
 </div>
 
-> An MCP (Model Context Protocol) server based on [ableton-js](https://github.com/leolabs/ableton-js) for real-time interaction and control with Ableton Live, dedicated to assisting music producers in music creation.
+
+
+## 🎯 Note
+
+As a music producer myself, I understand the challenges and needs during the music creation process. This tool aims to provide Ableton users with an intelligent and practical auxiliary system to make the creative process more natural and smooth. I always adhere to the core concept of "assisting creation" rather than blindly pursuing AI to generate complete musical notes – truly moving musical works are inseparable from unique human creativity and artistic perception, which is currently beyond the reach of AI technology.
+
+
 
 ## 🚀 Features
 
@@ -32,6 +38,15 @@
 ### 🎧 Audio Operations
 - Supports recording track content based on time range
 
+## 📝 To-Do List
+- Add recording and playback of user operations
+- Support direct moving of track positions
+- Support direct loading of instruments and effects
+- Others...
+
+## ⚠️ Warning
+- Direct manipulation of MIDI clips by AI may result in the loss of original notes and cannot be undone with Ctrl + Z. Please operate with caution.
+
 ## 📥 Installation
 
 1. Install **Node.js**: Make sure the npx command is available. It's recommended to install the latest stable version from the [Node.js official website](https://nodejs.org/)
@@ -45,7 +60,7 @@
 
    <div align="center">
      <img src="./assets/images/setting.jpg" alt="Ableton Live MIDI Remote Scripts Configuration" width="80%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-     <p><em>Figure 1: Enabling AbletonJS Control Surface in Ableton Live</em></p>
+     <p><em>Figure 1: Enabling AbletonJS Control Surface in Ableton Live Configuration</em></p>
    </div>
 
 3. Connect using an MCP client, including but not limited to:
@@ -56,6 +71,8 @@
 ### Cursor Configuration Example
 
 Configure ableton-copilot-mcp in Cursor:
+
+<span style="color: red">Currently, Cursor supports a maximum of 40 MCP tools, which may cause some features to be unavailable.</span>
 
 ```json
 "ableton-js-mcp": {

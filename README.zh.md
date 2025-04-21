@@ -9,6 +9,10 @@
 
 > 一个基于 [ableton-js](https://github.com/leolabs/ableton-js) 搭建的 MCP（Model Context Protocol）服务器，用于与 Ableton Live 进行实时交互和控制，致力于辅助音乐制作人进行音乐制作。
 
+## 🎯 注意
+
+作为一名音乐制作人，我也许理解音乐创作过程中的挑战与需求。本工具旨在为Ableton使用者提供一套智能且实用的辅助系统，让创作过程更加自然流畅。我始终坚持"辅助创作"的核心理念，而非盲目追求让AI直接生成出完整的音符 —— 真正打动人心的音乐作品永远离不开人类独特的创造力与艺术感知，这是当前 AI 技术尚无法企及的领域。
+
 ## 🚀 功能特性
 
 ### 🎵 歌曲控制（Song）
@@ -31,6 +35,15 @@
 ### 🎧 其它操作（Audio）
 - 支持对轨道内容进行录制
 
+## 📝 待办事项
+- 添加对用户操作的记录和回放
+- 支持直接移动轨道位置
+- 支持直接加载乐器和效果器
+- 其它...
+
+## ⚠️ 注意
+- 当ai直接对midi片段操作时可能会导致原有的音符丢失，无法使用ctrl + z 撤销，请谨慎操作
+
 ## 📥 安装准备
 1. 安装 **Node.js**：确保 npx 命令可以正常运行，建议前往 [Node.js 官网](https://nodejs.org/) 安装最新的稳定版本
 2. 安装 **MIDI Remote Scripts**：按照 [ableton-js](https://github.com/leolabs/ableton-js) 项目说明将 AbletonJS 的 MIDI Remote Scripts 安装到您的 Ableton Live 中
@@ -52,6 +65,7 @@
    - Claude Desktop
 
 ### Cursor 配置示例
+<span style="color: red">目前 Cursor 最多仅支持40个mcp tool，有可能会导致部分功能不可用</span>
 
 在 Cursor 中配置 ableton-copilot-mcp：
 
