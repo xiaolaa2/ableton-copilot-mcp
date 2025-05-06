@@ -65,7 +65,7 @@ export async function initializeDataSource(dbPath: string): Promise<void> {
         subscribers: [],
         // Use the migrations directory path returned by ensureMigrationsDir
         migrations: [path.join(migrationsDir, '*.js')],
-        migrationsTableName: 'migrations_history',
+        migrationsTableName: 'migrations',
         // Set to false, we will manually control the migration process
         migrationsRun: false,
         // SQLite-specific optimizations
@@ -87,10 +87,10 @@ export async function initializeDataSource(dbPath: string): Promise<void> {
             if (!firstRun) {
                 // Debug - print migrations table content
                 try {
-                    const migrationRows = await AppDataSource.query('SELECT * FROM migrations_history')
+                    const migrationRows = await AppDataSource.query('SELECT * FROM migrations')
                     logger.info(`Current migrations in DB: ${JSON.stringify(migrationRows)}`)
                 } catch (err) {
-                    logger.warn('Could not query migrations_history table:', err)
+                    logger.warn('Could not query migrations table:', err)
                 }
                 
                 // Check if there are pending migrations
