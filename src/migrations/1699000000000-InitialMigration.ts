@@ -6,7 +6,7 @@ export class InitialMigration1699000000000 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         // Create the migrations table to track executed migrations
         await queryRunner.query(`
-            CREATE TABLE "migrations" (
+            CREATE TABLE IF NOT EXISTS "migrations" (
                 "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                 "timestamp" bigint NOT NULL,
                 "name" varchar NOT NULL
@@ -15,7 +15,7 @@ export class InitialMigration1699000000000 implements MigrationInterface {
 
         // Create the operation_histories table
         await queryRunner.query(`
-            CREATE TABLE "operation_histories" (
+            CREATE TABLE IF NOT EXISTS "operation_histories" (
                 "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                 "tool_name" varchar(100) NOT NULL,
                 "input_params" text NULL,
@@ -26,12 +26,12 @@ export class InitialMigration1699000000000 implements MigrationInterface {
         `)
 
         // Create indexes for operation_histories table
-        await queryRunner.query('CREATE INDEX "IDX_operation_histories_status" ON "operation_histories" ("status")')
-        await queryRunner.query('CREATE INDEX "IDX_operation_histories_tool_name" ON "operation_histories" ("tool_name")')
+        await queryRunner.query('CREATE INDEX IF NOT EXISTS "IDX_operation_histories_status" ON "operation_histories" ("status")')
+        await queryRunner.query('CREATE INDEX IF NOT EXISTS "IDX_operation_histories_tool_name" ON "operation_histories" ("tool_name")')
 
         // Create the snapshots table
         await queryRunner.query(`
-            CREATE TABLE "snapshots" (
+            CREATE TABLE IF NOT EXISTS "snapshots" (
                 "id" integer PRIMARY KEY AUTOINCREMENT NOT NULL,
                 "history_id" integer NOT NULL,
                 "snapshot_data" text NULL,
@@ -42,18 +42,18 @@ export class InitialMigration1699000000000 implements MigrationInterface {
         `)
 
         // Create index for snapshots table
-        await queryRunner.query('CREATE INDEX "IDX_snapshots_history_id" ON "snapshots" ("history_id")')
+        await queryRunner.query('CREATE INDEX IF NOT EXISTS "IDX_snapshots_history_id" ON "snapshots" ("history_id")')
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         // Drop indexes
-        await queryRunner.query('DROP INDEX "IDX_operation_histories_status"')
-        await queryRunner.query('DROP INDEX "IDX_operation_histories_tool_name"')
-        await queryRunner.query('DROP INDEX "IDX_snapshots_history_id"')
+        await queryRunner.query('DROP INDEX IF EXISTS "IDX_operation_histories_status"')
+        await queryRunner.query('DROP INDEX IF EXISTS "IDX_operation_histories_tool_name"')
+        await queryRunner.query('DROP INDEX IF EXISTS "IDX_snapshots_history_id"')
         
         // Drop tables
-        await queryRunner.query('DROP TABLE "snapshots"')
-        await queryRunner.query('DROP TABLE "operation_histories"')
-        await queryRunner.query('DROP TABLE "migrations"')
+        await queryRunner.query('DROP TABLE IF EXISTS "snapshots"')
+        await queryRunner.query('DROP TABLE IF EXISTS "operation_histories"')
+        await queryRunner.query('DROP TABLE IF EXISTS "migrations"')
     }
 } 
