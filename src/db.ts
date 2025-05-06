@@ -1,5 +1,5 @@
 import 'reflect-metadata'
-import { DataSource, QueryRunner } from 'typeorm'
+import { DataSource, QueryRunner, Logger as TypeOrmLogger, LoggerOptions } from 'typeorm'
 import { OperationHistory } from './entities/OperationHistory.js'
 import { Snapshot } from './entities/Snapshot.js'
 import { logger } from './main.js'
@@ -10,6 +10,37 @@ let AppDataSource: DataSource | null = null
 const MAX_RETRIES = 3
 const RETRY_DELAY = 1000 // 1 second delay
 
+// 根据环境设置 TypeORM 日志级别
+const isProd = process.env.NODE_ENV === 'production'
+const typeormLogging = isProd
+    ? ['error', 'warn', 'migration']
+    : ['query', 'error', 'schema', 'warn', 'info', 'log', 'migration']
+
+class TypeOrmLoggerAdapter implements TypeOrmLogger {
+    logQuery(query: string, parameters?: any[]) {
+        logger.debug(`[typeorm][query] ${query}${parameters && parameters.length ? ' -- ' + JSON.stringify(parameters) : ''}`)
+    }
+    logQueryError(error: string | Error, query: string, parameters?: any[]) {
+        logger.error(`[typeorm][query-error] ${query}${parameters && parameters.length ? ' -- ' + JSON.stringify(parameters) : ''} -- ${error}`)
+    }
+    logQuerySlow(time: number, query: string, parameters?: any[]) {
+        logger.warn(`[typeorm][slow-query][${time}ms] ${query}${parameters && parameters.length ? ' -- ' + JSON.stringify(parameters) : ''}`)
+    }
+    logSchemaBuild(message: string) {
+        logger.info(`[typeorm][schema] ${message}`)
+    }
+    logMigration(message: string) {
+        logger.info(`[typeorm][migration] ${message}`)
+    }
+    log(level: 'log' | 'info' | 'warn', message: any) {
+        if (level === 'log' || level === 'info') {
+            logger.info(`[typeorm][${level}] ${message}`)
+        } else if (level === 'warn') {
+            logger.warn(`[typeorm][warn] ${message}`)
+        }
+    }
+}
+
 export async function initializeDataSource(dbPath: string): Promise<void> {
     if (AppDataSource && AppDataSource.isInitialized) {
         logger.info('Data Source has already been initialized!')
@@ -18,8 +49,6 @@ export async function initializeDataSource(dbPath: string): Promise<void> {
 
     // Check if this is the first run with the new migration system
     const firstRun = isFirstRun(dbPath)
-    
-    // No longer create backup here, will create backup before migrations
     
     // Ensure migrations directory exists and get its path
     const migrationsDir = ensureMigrationsDir()
@@ -30,7 +59,8 @@ export async function initializeDataSource(dbPath: string): Promise<void> {
         // On first run, we can use synchronize to create tables
         // After that, migrations will handle schema changes
         synchronize: firstRun,
-        logging: true, // Enable logging to debug migrations
+        logging: typeormLogging as LoggerOptions,
+        logger: new TypeOrmLoggerAdapter(),
         entities: [OperationHistory, Snapshot],
         subscribers: [],
         // Use the migrations directory path returned by ensureMigrationsDir

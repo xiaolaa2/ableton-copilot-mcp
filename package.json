@@ -1,5 +1,5 @@
 {
-  "name": "ableton-copilot-mcp",
+  "name": "@xiaolaa2/ableton-copilot-mcp",
   "version": "0.4.0",
   "description": "Ableton Live MCP depend on Ableton JS",
   "main": "dist/main.js",
