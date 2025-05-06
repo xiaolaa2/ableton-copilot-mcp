@@ -1,37 +1,23 @@
 import { z } from 'zod'
-import { tool } from '../mcp/decorators/decorator.js'
-import { commomProp, TrackSettableProp } from '../types/types.js'
-import { Track } from 'ableton-js/ns/track.js'
-import { modifyTrackProp } from '../utils/obj-utils.js'
-import { getRawTrackById, getTrackById, Result } from '../utils/common.js'
+import { tool } from '../mcp/decorators/tool.js'
+import { commomProp, TrackGettableProps, TrackSettableProp } from '../types/zod-types.js'
+import { batchModifyTrackProp, getTrackProps } from '../utils/obj-utils.js'
+import { getTrackById, Result } from '../utils/common.js'
 import { Clip } from 'ableton-js/ns/clip.js'
-import { ableton } from '../ableton.js'
+import { deleteClip, deleteDevice, createAudioClip } from '../utils/track-utils.js'
 
 class TrackTools {
 
     @tool({
-        name: 'get_clips_by_track_id',
-        description: 'get all clip by track id',
+        name: 'get_track_properties',
+        description: 'get track properties. To get specific properties, set the corresponding property name to true in the properties parameter',
         paramsSchema: {
             track_id: z.string(),
+            properties: TrackGettableProps,
         }
-    })
-    async getClipByTrack(track_id: string) {
+    }) async getTracksProperty({ track_id, properties }: { track_id: string, properties: z.infer<typeof TrackGettableProps> }) {
         const track = getTrackById(track_id)
-        const clips = await track.get('arrangement_clips')
-        return clips.map((clip) => clip.raw)
-    }
-
-    @tool({
-        name: 'get_track_info_by_id',
-        description: 'get track info by id',
-        paramsSchema: {
-            track_id: z.string(),
-        }
-    })
-    async getTrackInfo(track_id: string) {
-        const track = getTrackById(track_id)
-        return track.raw
+        return await getTrackProps(track, properties)
     }
 
     @tool({
@@ -43,7 +29,7 @@ class TrackTools {
             time: commomProp.time,
         }
     })
-    async createEmptyMidiClip(track_id: string, length: number, time: number) {
+    async createEmptyMidiClip({ track_id, length, time }: { track_id: string, length: number, time: number }) {
         // Get track object
         const track = getTrackById(track_id)
 
@@ -76,20 +62,17 @@ class TrackTools {
     }
 
     @tool({
-        name: 'set_track_property',
-        description: 'set track property',
+        name: 'set_tracks_property',
+        description: 'batch set tracks property',
         paramsSchema: {
-            track_id: z.string(),
-            property: TrackSettableProp,
+            tracks: z.array(z.object({
+                track_id: z.string().describe('get track id by get_all_tracks'),
+                property: TrackSettableProp,
+            }))
         }
     })
-    async setTrackProperty(
-        track_id: string,
-        property: z.infer<typeof TrackSettableProp>
-    ) {
-        const raw_track = getRawTrackById(track_id)
-        const track = new Track(ableton, raw_track)
-        await modifyTrackProp(track, property)
+    async setTracksProperty({ tracks }: { tracks: { track_id: string, property: z.infer<typeof TrackSettableProp> }[] }) {
+        await batchModifyTrackProp(tracks)
         return Result.ok()
     }
 
@@ -102,23 +85,60 @@ class TrackTools {
             time: z.number(),
         }
     })
-    async duplicateClipToTrack(clip_id: string, track_id: string, time: number) {
+    async duplicateClipToTrack({ clip_id, track_id, time }: { clip_id: string, track_id: string, time: number }) {
         const track = getTrackById(track_id)
         await track.duplicateClipToArrangement(clip_id, time)
         return Result.ok()
     }
 
+    // @tool({
+    //     name: 'delete_clip',
+    //     description: 'delete clip by id',
+    //     paramsSchema: {
+    //         track_id: z.string(),
+    //         clip_id: z.string(),
+    //     }
+    // })
+    // TODO: need ableton-js support for delete_clip
+    async deleteClipById({ track_id, clip_id }: { track_id: string, clip_id: string }) {
+        const track = getTrackById(track_id)
+        await deleteClip(track, clip_id)
+        return Result.ok()
+    }
+
     @tool({
-        name: 'get_track_available_input_routings',
-        description: 'get track available input routings',
+        name: 'delete_device',
+        description: 'delete device by index',
         paramsSchema: {
             track_id: z.string(),
+            index: z.number(),
         }
     })
-    async getTrackAvailableInputRoutings(track_id: string) {
+    async deleteDeviceByIndex({ track_id, index }: { track_id: string, index: number }) {
         const track = getTrackById(track_id)
-        const input_routings = await track.get('available_input_routing_types')
-        return input_routings.map((routing) => routing.display_name)
+        await deleteDevice(track, index)
+        return Result.ok()
+    }
+
+    @tool({
+        name: 'create_audio_clip',
+        description: `Create audio clip on track.
+        Given an absolute path to a valid audio file in a supported format, 
+        creates an audio clip that references the file at the specified position in the arrangement view.
+        Prints an error if:
+        - The track is not an audio track
+        - The track is frozen
+        - The track is being recorded into`,
+        paramsSchema: {
+            track_id: z.string(),
+            file_path: z.string().describe('absolute path to audio file'),
+            position: z.number().min(0).max(1576800).describe('position in beats'),
+        }
+    })
+    async createAudioClip({ track_id, file_path, position }: { track_id: string, file_path: string, position: number }) {
+        const track = getTrackById(track_id)
+        await createAudioClip(track, file_path, position)
+        return Result.ok()
     }
 }
 

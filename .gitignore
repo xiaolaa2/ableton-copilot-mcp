@@ -25,3 +25,9 @@ pnpm-debug.log*
 # System Files
 .DS_Store
 Thumbs.db
+
+# Yarn
+.yarn/
+
+# Test
+test-plan.md

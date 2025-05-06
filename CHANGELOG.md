@@ -2,28 +2,62 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.1] - 2025-04-02
+## [0.4.0] - 2025-04-29
+- 支持通过mcp env参数 BASE_PATH 来指定mcp的日志和数据文件存储路径
 
-### Changed
-- Replace old publish scripts with new release scripts in package.json
-- Add a new GitHub Actions workflow for automated npm publishing on version tags
-- Update song-tools.ts documentation for clarity
+## [0.3.2] - 未发布
 
-## [0.3.0] - 2025-04-01
+### 优化
+- 优化工具执行性能，添加性能监控功能
+- 添加对象缓存系统，提高重复操作的性能
+- 增强错误处理系统，提供更标准化的错误响应
+- 添加数据库连接失败重试机制
+- 为SQLite添加WAL模式，提高并发性能
+- 添加异常预防和全局未捕获异常处理机制
+- 优化服务启动流程，提供更好的状态反馈
+- 扩展Result类，支持更丰富的返回值类型
 
-### Changed
-- Refactor: Restructured Ableton initialization logic by moving it from main.ts to ableton.ts for better maintainability
-- Added recording utility functions that support recording by time range and clip trimming
-- Introduced async-mutex dependency to ensure thread safety during recording
-- Fixed type definitions and comments to improve code readability
-- Fixed incorrect track and clip color settings
+## [0.3.1] - 2023-10-25
 
-## [0.2.0] - 2025-03-30
+### 新功能
 
-### Changed
-- Refactor: Update tool names to use underscores instead of hyphens
-  - Changed tool names in ClipTools, SongTools, and TrackTools to use underscores for consistency
-  - Updated descriptions and parameter schemas accordingly
+- 添加修改器件参数的功能
+- 支持录音控制
+
+### Bug修复
+
+- 修复应用启动时日志目录不存在的问题
+- 修复MIDI录制错误处理
+
+## [0.3.0] - 2023-10-22
+
+### 新功能
+
+- 增加历史记录功能，支持操作历史记录和回滚
+- 增加快照功能
+
+### 优化
+
+- 改进错误处理
+
+## [0.2.0] - 2023-10-20
+
+### 新功能
+
+- 添加创建音频片段的功能
+- 添加删除设备的功能
+
+### Bug修复
+
+- 修复创建轨道时的索引问题
+
+## [0.1.0] - 2023-10-18
+
+### 初始发布
+
+- 基本的Ableton Live控制功能
+- 支持MCP协议
+- 基础工具集
 
 ## [0.1.2] - Initial Release
 

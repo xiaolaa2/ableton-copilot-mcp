@@ -3,9 +3,7 @@
   "version": "0.3.1",
   "description": "Ableton Live MCP depend on Ableton JS",
   "main": "dist/main.js",
-  "bin": {
-    "ableton-copilot-mcp": "./bin/cli.js"
-  },
+  "bin": "./bin/cli.js",
   "scripts": {
     "dev": "tsc && node dist/main.js",
     "build": "tsc",
@@ -16,7 +14,11 @@
     "publish-npm": "npm publish",
     "release:major": "npm version major && git push --follow-tags",
     "release:minor": "npm version minor && git push --follow-tags",
-    "release:patch": "npm version patch && git push --follow-tags"
+    "release:patch": "npm version patch && git push --follow-tags",
+    "typeorm": "typeorm-ts-node-esm",
+    "migration:generate": "npm run typeorm -- migration:generate -d src/migration-datasource.ts",
+    "migration:run": "npm run typeorm -- migration:run -d src/migration-datasource.ts",
+    "migration:revert": "npm run typeorm -- migration:revert -d src/migration-datasource.ts"
   },
   "keywords": [
     "ableton",
@@ -35,24 +37,27 @@
   },
   "homepage": "https://github.com/xiaolaa2/ableton-copilot-mcp#readme",
   "devDependencies": {
-    "@eslint/js": "^9.23.0",
-    "@types/node": "^22.13.14",
-    "@typescript-eslint/eslint-plugin": "^8.28.0",
-    "@typescript-eslint/parser": "^8.28.0",
-    "eslint": "^9.23.0",
+    "@eslint/js": "^9.25.1",
+    "@types/node": "^22.15.2",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "eslint": "^9.25.1",
     "globals": "^16.0.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.28.0"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.31.0"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.8.0",
+    "@modelcontextprotocol/sdk": "^1.10.2",
     "ableton-js": "^3.6.1",
     "async-mutex": "^0.5.0",
     "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
+    "typeorm": "^0.3.22",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.3"
   },
-  "type": "module"
+  "type": "module",
+  "packageManager": "yarn@4.9.1"
 }

@@ -1,78 +1,64 @@
-import { tool } from '../mcp/decorators/decorator.js'
+import { tool } from '../mcp/decorators/tool.js'
 import { z } from 'zod'
 import { Note } from 'ableton-js/util/note.js'
-import { NOTE, ClipSettableProp } from '../types/types.js'
-import { modifyClipProp } from '../utils/obj-utils.js'
+import { NOTE, ClipSettableProp, ClipGettableProp } from '../types/zod-types.js'
+import { batchModifyClipProp, getClipProps } from '../utils/obj-utils.js'
 import { getClipById, Result } from '../utils/common.js'
-import { ableton } from '../ableton.js'
-import { removeAllNotes } from '../utils/clip-utils.js'
-
-async function getDetailClip() {
-    const detailClip = await ableton.song.view.get('detail_clip')
-    if (detailClip === null || detailClip === undefined) {
-        throw new Error('please open piano roll')
-    }
-    return detailClip
-}
+import { createNoteSnapshot, removeNotesExtended } from '../utils/clip-utils.js'
 
 class ClipTools {
 
     @tool({
-        name: 'get_detail_clip',
-        description: 'Get detail clip/piano roll clip',
+        name: 'get_clip_properties',
+        description: 'Get clip properties by clip id. To get specific properties, set the corresponding property name to true in the properties parameter.',
+        paramsSchema: {
+            clip_id: z.string(),
+            properties: ClipGettableProp,
+        }
     })
-    async getDetailClip() {
-        const detailClip = await getDetailClip()
-        return detailClip.raw
+    async getClipInfoById({ clip_id, properties }: { clip_id: string, properties: z.infer<typeof ClipGettableProp> }) {
+        const clip = getClipById(clip_id)
+        return await getClipProps(clip, properties)
     }
 
     @tool({
-        name: 'get_clip_info_by_id',
-        description: 'Get clip info by clip id',
+        name: 'remove_clip_notes',
+        description: 'Remove clip notes by clip id',
+        enableSnapshot: true,
         paramsSchema: {
-            clip_id: z.string()
+            clip_id: z.string(),
+            from_pitch: z.number().min(0).max(127),
+            pitch_span: z.number().describe('The number of semitones to remove. Must be a value greater than 0.'),
+            from_time: z.number(),
+            time_span: z.number().describe('The number of beats to remove. Must be a value greater than 0.'),
         }
     })
-    async getClipInfoById(clip_id: string) {
+    async removeClipNotes({ clip_id, from_pitch, pitch_span, from_time, time_span, historyId }: {
+        clip_id: string
+        from_pitch: number
+        pitch_span: number
+        from_time: number
+        time_span: number
+        historyId: number
+    }) {
         const clip = getClipById(clip_id)
-        return clip.raw
-    }
-
-    @tool({
-        name: 'get_all_notes_by_clipid',
-        description: 'Get clip all notes by clip id',
-        paramsSchema: {
-            clip_id: z.string()
-        }
-    })
-    async getClipNotes(clip_id: string) {
-        const clip = getClipById(clip_id)
-        return clip.getNotes(0, 0, 9999, 127)
-    }
-
-    @tool({
-        name: 'remove_clip_all_notes',
-        description: 'Remove clip all notes by clip id',
-        paramsSchema: {
-            clip_id: z.string()
-        }
-    })
-    async removeALlClipNotes(clip_id: string) {
-        const clip = getClipById(clip_id)
-        await removeAllNotes(clip)
+        await createNoteSnapshot(clip, historyId)
+        await removeNotesExtended(clip, from_pitch, pitch_span, from_time, time_span)
         return Result.ok()
     }
 
     @tool({
         name: 'add_notes_to_clip',
         description: 'Add notes to clip by clip id',
+        enableSnapshot: true,
         paramsSchema: {
             notes: z.array(NOTE).describe('[array] the notes to add.'),
             clip_id: z.string()
         }
     })
-    async addClipNotes(notes: Note[], clip_id: string) {
+    async addClipNotes({ notes, clip_id, historyId }: { notes: Note[], clip_id: string, historyId: number }) {
         const clip = getClipById(clip_id)
+        await createNoteSnapshot(clip, historyId)
         await clip.setNotes(notes)
         return Result.ok()
     }
@@ -80,32 +66,32 @@ class ClipTools {
     @tool({
         name: 'replace_all_notes_to_clip',
         description: 'Replace clip all notes by clip id',
+        enableSnapshot: true,
         paramsSchema: {
             notes: z.array(NOTE).describe('[array] the notes to remove.'),
             clip_id: z.string()
         }
     })
-    async replaceAllDetailClipNotes(notes: Note[], clip_id: string) {
+    async replaceAllDetailClipNotes({ notes, clip_id, historyId }: { notes: Note[], clip_id: string, historyId: number }) {
         const clip = getClipById(clip_id)
+        await createNoteSnapshot(clip, historyId)
         await clip.selectAllNotes()
         await clip.replaceSelectedNotes(notes)
         return Result.ok()
     }
 
     @tool({
-        name: 'set_clip_property',
-        description: 'set clip property',
+        name: 'set_clips_property',
+        description: 'batch set clip property',
         paramsSchema: {
-            clip_id: z.string(),
-            property: ClipSettableProp,
+            clips: z.array(z.object({
+                clip_id: z.string(),
+                property: ClipSettableProp,
+            }))
         }
     })
-    async setClipProperty(
-        clip_id: string,
-        property: z.infer<typeof ClipSettableProp>
-    ) {
-        const clip = getClipById(clip_id)
-        await modifyClipProp(clip, property)
+    async setClipProperty({ clips }: { clips: { clip_id: string, property: z.infer<typeof ClipSettableProp> }[] }) {
+        await batchModifyClipProp(clips)
         return Result.ok()
     }
 
@@ -118,7 +104,7 @@ class ClipTools {
             clip_id: z.string(),
         }
     })
-    async cropClip(clip_id: string) {
+    async cropClip({ clip_id }: { clip_id: string }) {
         const clip = getClipById(clip_id)
         await clip.crop()
         return Result.ok()
@@ -132,7 +118,7 @@ class ClipTools {
             clip_id: z.string(),
         }
     })
-    async duplicateLoop(clip_id: string) {
+    async duplicateLoop({ clip_id }: { clip_id: string }) {
         const clip = getClipById(clip_id)
         await clip.duplicateLoop()
         return Result.ok()
@@ -154,14 +140,14 @@ class ClipTools {
             transposition_amount: z.number(),
         }
     })
-    async duplicateRegion(
+    async duplicateRegion({ clip_id, region_start, region_end, destination_time, pitch, transposition_amount }: {
         clip_id: string,
         region_start: number,
         region_end: number,
         destination_time: number,
         pitch: number,
         transposition_amount: number
-    ) {
+    }) {
         const clip = getClipById(clip_id)
         await clip.duplicateRegion(
             region_start,

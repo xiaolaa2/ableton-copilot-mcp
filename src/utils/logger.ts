@@ -6,8 +6,8 @@ import fs from 'fs'
 // Add DailyRotateFile plugin to winston transports
 const { format } = winston
 // Handle DailyRotateFile with type assertion
-const DailyRotateFileTransport = DailyRotateFile as unknown as new (options: DailyRotateFile.DailyRotateFileTransportOptions) 
-=> winston.transport
+const DailyRotateFileTransport = DailyRotateFile as unknown as new (options: DailyRotateFile.DailyRotateFileTransportOptions)
+    => winston.transport
 
 // Create custom formatter to handle objects and multiple parameters
 const objectFormat = format((info) => {
