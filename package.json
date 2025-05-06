@@ -59,5 +59,8 @@
     "zod": "^3.24.3"
   },
   "type": "module",
-  "packageManager": "yarn@4.9.1"
+  "packageManager": "yarn@4.9.1",
+  "publishConfig": {
+    "access": "public"
+  }
 }

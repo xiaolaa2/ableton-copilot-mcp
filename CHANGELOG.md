@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.0] - 2025-04-29
+## [0.4.1] - 2025-05-6
+- fix som bugs
+
+## [0.4.0] - 2025-05-6
 - Added support for BASE_PATH environment variable to specify log and data file storage path for MCP
 - Introduced database migration system with initial migration setup
 - Implemented operation history and snapshot features for better state management
