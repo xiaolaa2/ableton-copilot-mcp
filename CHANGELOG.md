@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.4.3] - 2025-05-6
+- Temporarily removed operation rollback feature to prevent exceptions during MCP server installation due to SQLite third-party library compilation issues
+- Fixed delete_track functionality not working when input parameter is audio
+
 ## [0.4.2] - 2025-05-6
 - fix som bugs
 
