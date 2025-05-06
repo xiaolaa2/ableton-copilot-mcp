@@ -7,13 +7,11 @@
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
 </div>
 
-
+> An MCP (Model Context Protocol) server built on [ableton-js](https://github.com/leolabs/ableton-js) for real-time interaction and control with Ableton Live, dedicated to assisting music producers in their music production.
 
 ## 🎯 Note
 
 As a music producer myself, I understand the challenges and needs during the music creation process. This tool aims to provide Ableton users with an intelligent and practical auxiliary system to make the creative process more natural and smooth. I always adhere to the core concept of "assisting creation" rather than blindly pursuing AI to generate complete musical notes – truly moving musical works are inseparable from unique human creativity and artistic perception, which is currently beyond the reach of AI technology.
-
-
 
 ## 🚀 Features
 
@@ -39,19 +37,15 @@ As a music producer myself, I understand the challenges and needs during the mus
 ### 🎧 Audio Operations
 - Supports recording track content based on time range
 
-### 📝 State Management
-- Operation history tracking with detailed logs
-- Snapshot creation for critical operations
-- Support for operation rollback (especially for note operations)
-- Browse and restore previous states
-
 ### 🔌 Device Management
 - Load audio effects, instruments and plugins
 - Modify device parameters
 - Browse available devices in the library
 
 ## 📝 To-Do List
-
+- Improve state management stability, support creating snapshots for states (midi, note), and support rollback of operations such as notes
+- Allow returning the created clip_id when creating midi clips (pending ableton-js update)
+- Support automatic envelope adjustment
 
 ## ⚠️ Warning
 - Direct manipulation of MIDI clips by AI may result in the loss of original notes and cannot be undone with Ctrl + Z. Please operate with caution.

@@ -52,8 +52,6 @@
     "ableton-js": "^3.6.1",
     "async-mutex": "^0.5.0",
     "reflect-metadata": "^0.2.2",
-    "sqlite3": "^5.1.7",
-    "typeorm": "^0.3.22",
     "winston": "^3.17.0",
     "winston-daily-rotate-file": "^5.0.0",
     "zod": "^3.24.3"

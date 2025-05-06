@@ -78,13 +78,17 @@ class SongTools {
         }
     })
     async deleteTrack({ index, type }: { index: number, type: TrackType }) {
+    
         switch (type) {
-            case TrackType.midi || TrackType.audio:
+            case TrackType.midi:
+            case TrackType.audio:
                 await ableton.song.deleteTrack(index)
                 break
             case TrackType.return:
                 await ableton.song.deleteReturnTrack(index)
                 break
+            default:
+                throw new Error('Invalid track type')
         }
         return Result.ok()
     }

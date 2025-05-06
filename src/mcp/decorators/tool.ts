@@ -4,18 +4,14 @@ import { ZodRawShape } from 'zod'
 import { ErrorTypes, handleError } from '../error-handler.js'
 import { ableton } from '../../ableton.js'
 import { FactoryContainer } from '../core.js'
-import { OperationStatus } from '../../entities/OperationHistory.js'
-import { createOperationHistory, updateOperationHistoryById } from '../../utils/snapshot-utils.js'
 import { logger } from '../../main.js'
 import PerformanceMonitor from '../../utils/performance-monitor.js'
 
 async function processToolReq(
     argsObj: object,
     originalFunc: (...args: any[]) => Promise<object>,
-    toolName: string,
-    enableSnapshot: boolean = false
+    toolName: string
 ): Promise<CallToolResult | Promise<CallToolResult>> {
-    let historyId = null
     const startTime = performance.now()
     
     try {
@@ -24,36 +20,10 @@ async function processToolReq(
             throw ErrorTypes.ABLETON_ERROR('Ableton is not connected, please check if Ableton is running.')
         }
 
-        // Create operation history record (if enabled)
-        if (enableSnapshot) {
-            historyId = await createOperationHistory({
-                tool_name: toolName,
-                input_params: JSON.stringify(argsObj),
-                execution_result: '',
-                status: OperationStatus.PENDING,
-            })
-        }
-
         // Execute original function
         const ans = await originalFunc({
             ...argsObj,
-            ...(enableSnapshot ? { historyId } : {}),
         })
-
-        // Update operation history record (if enabled)
-        if (enableSnapshot && historyId) {
-            await updateOperationHistoryById(historyId, {
-                execution_result: JSON.stringify(ans),
-                status: OperationStatus.SUCCESS,
-            })
-        }
-
-        // Build response
-        const response = enableSnapshot ? {
-            history_id: historyId,
-            result: ans
-        } : ans
-
         // Record performance metrics
         const endTime = performance.now()
         PerformanceMonitor.instance.recordMetric(`tool:${toolName}`, endTime - startTime)
@@ -62,19 +32,12 @@ async function processToolReq(
             content: [
                 {
                     type: 'text',
-                    text: JSON.stringify(response),
+                    text: JSON.stringify(ans),
                 }
             ]
         }
     }
     catch (error) {
-        // Update operation history record to failed (if enabled)
-        if (enableSnapshot && historyId) {
-            await updateOperationHistoryById(historyId, {
-                execution_result: String(error),
-                status: OperationStatus.FAILED,
-            })
-        }
         
         // Record performance metrics (error case)
         const endTime = performance.now()
@@ -126,7 +89,7 @@ export function tool(options?: {
                     options.description ?? '',
                     options.paramsSchema ?? {},
                     async (args) => {
-                        return await processToolReq(args, originalFunc, toolName, options.enableSnapshot)
+                        return await processToolReq(args, originalFunc, toolName)
                     }
                 )
             }
