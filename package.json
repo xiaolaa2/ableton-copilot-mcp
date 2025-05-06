@@ -1,6 +1,6 @@
 {
   "name": "@xiaolaa2/ableton-copilot-mcp",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Ableton Live MCP depend on Ableton JS",
   "main": "dist/main.js",
   "bin": "./bin/cli.js",
