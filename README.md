@@ -26,6 +26,7 @@ As a music producer myself, I understand the challenges and needs during the mus
 ### 🎹 Track Management
 - Get all clips in a track
 - Create empty MIDI clips
+- Create audio clips in tracks based on provided sample file paths
 - Set track properties (mute, color, name, arm, solo, etc.)
 - Duplicate MIDI clips to specified tracks
 
@@ -38,11 +39,19 @@ As a music producer myself, I understand the challenges and needs during the mus
 ### 🎧 Audio Operations
 - Supports recording track content based on time range
 
+### 📝 State Management
+- Operation history tracking with detailed logs
+- Snapshot creation for critical operations
+- Support for operation rollback (especially for note operations)
+- Browse and restore previous states
+
+### 🔌 Device Management
+- Load audio effects, instruments and plugins
+- Modify device parameters
+- Browse available devices in the library
+
 ## 📝 To-Do List
-- Add recording and playback of user operations
-- Support direct moving of track positions
-- Support direct loading of instruments and effects
-- Others...
+
 
 ## ⚠️ Warning
 - Direct manipulation of MIDI clips by AI may result in the loss of original notes and cannot be undone with Ctrl + Z. Please operate with caution.
@@ -67,6 +76,12 @@ As a music producer myself, I understand the challenges and needs during the mus
    - [Cursor](https://www.cursor.com)
    - [Cherry Studio](https://github.com/CherryHQ/cherry-studio)
    - Claude Desktop
+
+### Environment Variables
+
+You can configure the following environment variables:
+
+- `BASE_PATH`: Specify a custom path for logs and data storage (default: user's home directory)
 
 ### Cursor Configuration Example
 

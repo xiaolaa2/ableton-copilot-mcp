@@ -2,28 +2,55 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.3.1] - 2025-04-02
+## [0.4.0] - 2025-04-29
+- Added support for BASE_PATH environment variable to specify log and data file storage path for MCP
+- Introduced database migration system with initial migration setup
+- Implemented operation history and snapshot features for better state management
+- Refactored tools and utilities for improved performance and maintainability
+- Updated ESLint configuration for better code quality
+- Removed pnpm lock file and switched to yarn for package management
+- Added new tools for browser and device management in Ableton
+- Enhanced error handling and performance monitoring capabilities
+- Fixed database migration table name inconsistencies to match entity definitions
+- Corrected field names and types in initial migration script
+- Improved database schema synchronization between models and migrations
+- Resolved redundant database backup creation issue
 
-### Changed
-- Replace old publish scripts with new release scripts in package.json
-- Add a new GitHub Actions workflow for automated npm publishing on version tags
-- Update song-tools.ts documentation for clarity
 
-## [0.3.0] - 2025-04-01
+## [0.3.1] - 2023-10-25
 
-### Changed
-- Refactor: Restructured Ableton initialization logic by moving it from main.ts to ableton.ts for better maintainability
-- Added recording utility functions that support recording by time range and clip trimming
-- Introduced async-mutex dependency to ensure thread safety during recording
-- Fixed type definitions and comments to improve code readability
-- Fixed incorrect track and clip color settings
+### Added
+- Added device parameter modification functionality
+- Added recording control support
 
-## [0.2.0] - 2025-03-30
+### Fixed
+- Fixed missing log directory issue at application startup
+- Fixed MIDI recording error handling
 
-### Changed
-- Refactor: Update tool names to use underscores instead of hyphens
-  - Changed tool names in ClipTools, SongTools, and TrackTools to use underscores for consistency
-  - Updated descriptions and parameter schemas accordingly
+## [0.3.0] - 2023-10-22
+
+### Added
+- Added operation history feature with rollback support
+- Added snapshot functionality
+
+### Improved
+- Improved error handling
+
+## [0.2.0] - 2023-10-20
+
+### Added
+- Added audio clip creation functionality
+- Added device deletion capability
+
+### Fixed
+- Fixed track creation index issues
+
+## [0.1.0] - 2023-10-18
+
+### Initial Release
+- Basic Ableton Live control functionality
+- MCP protocol support
+- Base toolset implementation
 
 ## [0.1.2] - Initial Release
 

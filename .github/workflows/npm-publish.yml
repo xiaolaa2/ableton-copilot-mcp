@@ -5,7 +5,7 @@ on:
     tags:
       - 'v*'
 
-# 添加权限配置
+# Add permissions configuration
 permissions:
   contents: write
   packages: write
@@ -14,7 +14,7 @@ permissions:
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    # 确保只在main分支上的标签推送时触发
+    # Ensure workflow only runs on tag pushes from main branch
     if: github.event.base_ref == 'refs/heads/main'
     steps:
       - name: Checkout code
@@ -36,6 +36,30 @@ jobs:
         id: get_version
         run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
 
+      - name: Extract release notes from CHANGELOG
+        id: extract_release_notes
+        run: |
+          VERSION=${{ env.VERSION }}
+          # Extract content for the current version from CHANGELOG
+          # Use awk to extract the version section and save it
+          # Capture all content from the version heading until the next version heading
+          RELEASE_NOTES=$(awk -v version="## \\[$VERSION\\]" '
+            BEGIN { found=0; }
+            found==1 && /^## \[/ { found=0; }
+            found==1 { print $0; }
+            $0 ~ version { found=1; }
+          ' CHANGELOG.md)
+          
+          # If no content is found, use a default message
+          if [ -z "$RELEASE_NOTES" ]; then
+            RELEASE_NOTES="Release version $VERSION. See CHANGELOG.md for details."
+          fi
+          
+          # Save the extracted content to environment variable, handling multiline text
+          echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
+          echo "$RELEASE_NOTES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Publish to NPM
         run: npm publish --no-git-checks
         env:
@@ -46,9 +70,11 @@ jobs:
         with:
           name: v${{ env.VERSION }}
           body: |
-            Release of ableton-copilot-mcp v${{ env.VERSION }}
+            # Release v${{ env.VERSION }}
             
-            Please see [CHANGELOG.md](./CHANGELOG.md) for details.
+            ${{ env.RELEASE_NOTES }}
+            
+            For complete details, please refer to the [CHANGELOG.md](https://github.com/xiaolaa2/ableton-copilot-mcp/blob/main/CHANGELOG.md).
           draft: false
           prerelease: false
         env:

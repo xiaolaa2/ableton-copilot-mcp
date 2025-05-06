@@ -1,40 +1,48 @@
 import { z } from 'zod'
-import { tool } from '../mcp/decorators/decorator.js'
-import { commomProp, TrackType, ZodTrackType } from '../types/types.js'
+import { tool } from '../mcp/decorators/tool.js'
+import { commomProp, SongGettableProps, SongSettableProp, SongViewGettableProps, SongViewSettableProp, TrackType, ZodTrackType } from '../types/zod-types.js'
 import { Track } from 'ableton-js/ns/track.js'
 import { Result } from '../utils/common.js'
-import { getSongInfo } from '../utils/obj-utils.js'
-import { recordByTimeRange } from '../utils/record-utils.js'
+import { getSongProperties, getSongViewProps, modifySongProp, modifySongViewProp } from '../utils/obj-utils.js'
 import { ableton } from '../ableton.js'
+import { recordByTimeRange } from '../utils/record-utils.js'
 
 class SongTools {
 
     @tool({
-        name: 'get_song_info',
-        description: `get song basic info, include tempo, 
-        time signature, root_note(begin from 0, C..B), scale name, song length`,
+        name: 'get_song_properties',
+        description: 'get song properties. To get specific properties, set the corresponding property name to true in the properties parameter.',
+        paramsSchema: SongGettableProps.shape
     })
-    async getSongInfo() {
-        const song = await ableton.song
-        return await getSongInfo(song)
+    async getSongProperties(propertys: z.infer<typeof SongGettableProps>) {
+        return await getSongProperties(ableton.song, propertys)
     }
 
     @tool({
-        name: 'get_all_tracks',
-        description: 'get all tracks',
+        name: 'get_song_view_properties',
+        description: 'get song view properties. To get specific properties, set the corresponding property name to true in the properties parameter.',
+        paramsSchema: SongViewGettableProps.shape
     })
-    async getAllTracks() {
-        const tracks = await ableton.song.get('tracks')
-        return tracks.map((track) => track.raw)
+    async getSongViewProperties(propertys: z.infer<typeof SongViewGettableProps>) {
+        return await getSongViewProps(ableton.song, propertys)
     }
 
     @tool({
-        name: 'get_tracks_count',
-        description: 'get midi + audio tracks count',
+        name: 'set_song_property',
+        description: 'set song basic properties',
+        paramsSchema: SongSettableProp.shape,
     })
-    async getTracksTotalCount() {
-        const tracks = await ableton.song.get('tracks')
-        return tracks.length
+    async setSongProperties(propertys: z.infer<typeof SongSettableProp>) {
+        return await modifySongProp(ableton.song, propertys)
+    }
+
+    @tool({
+        name: 'set_song_view_property',
+        description: 'set song view properties',
+        paramsSchema: SongViewSettableProp.shape,
+    })
+    async setSongViewProperties(propertys: z.infer<typeof SongViewSettableProp>) {
+        return await modifySongViewProp(ableton.song, propertys)
     }
 
     @tool({
@@ -45,7 +53,7 @@ class SongTools {
             index: z.number().optional().default(0).describe('[int] index of track default 0, range [0, track count]'),
         }
     })
-    async createTrack(type: TrackType, index: number) {
+    async createTrack({ type, index = 0 }: { type: TrackType, index?: number }) {
         let track: Track
         switch (type) {
             case TrackType.midi:
@@ -69,7 +77,7 @@ class SongTools {
             type: ZodTrackType,
         }
     })
-    async deleteTrack(index: number, type: TrackType) {
+    async deleteTrack({ index, type }: { index: number, type: TrackType }) {
         switch (type) {
             case TrackType.midi || TrackType.audio:
                 await ableton.song.deleteTrack(index)
@@ -88,7 +96,7 @@ class SongTools {
             index: z.number().describe('[int] index of track'),
         }
     })
-    async duplicateTrack(index: number) {
+    async duplicateTrack({ index }: { index: number }) {
         await ableton.song.duplicateTrack(index)
         return Result.ok()
     }
@@ -99,14 +107,19 @@ class SongTools {
             Before recording, please:
             ENSURE: 
             1. Set the recording track to record mode
-            2. Set the recording track's input routing to Resample or a specific audio track/input routing
+            2. Set the recording track's input routing to Resample or a specific audio track/input routing(get from get_track_available_input_routings tool)
             3. After recording, disable the track's record mode`,
         paramsSchema: {
             start_time: commomProp.time,
             end_time: z.number().describe('[int] end time of record'),
         }
     })
-    async recordAudio(start_time: number, end_time: number) {
+    async recordAudio({
+        start_time, end_time
+    }: {
+        start_time: number,
+        end_time: number,
+    }) {
         return recordByTimeRange(ableton.song, start_time, end_time)
     }
 
