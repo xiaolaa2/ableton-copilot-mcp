@@ -28,7 +28,7 @@ export async function verifyMigrationsTable(dataSource: DataSource): Promise<boo
     try {
         const tableExists = await dataSource.query(`
             SELECT name FROM sqlite_master 
-            WHERE type='table' AND name='migrations_history'
+            WHERE type='table' AND name='migrations'
         `)
         
         return tableExists.length > 0
