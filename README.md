@@ -94,7 +94,7 @@ Configure ableton-copilot-mcp in Cursor:
     "command": "npx",
     "args": [
         "-y",
-        "ableton-copilot-mcp"
+        "@xiaolaa2/ableton-copilot-mcp"
     ]
 }
 ```
