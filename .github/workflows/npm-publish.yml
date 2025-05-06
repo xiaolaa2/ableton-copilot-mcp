@@ -2,6 +2,8 @@ name: npm-publish
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -12,10 +14,28 @@ permissions:
   issues: write
 
 jobs:
-  build-and-publish:
+  build:
     runs-on: ubuntu-latest
-    # Ensure workflow only runs on tag pushes from main branch
-    if: github.event.base_ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
