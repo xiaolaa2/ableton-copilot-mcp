@@ -20,6 +20,7 @@
 ### 🎹 Track Management
 - Get all clips in a track
 - Create empty MIDI clips
+- Create audio clips in tracks based on provided sample file paths
 - Set track properties (mute, color, name, arm, solo, etc.)
 - Duplicate MIDI clips to specified tracks
 
@@ -31,6 +32,17 @@
 
 ### 🎧 Audio Operations
 - Supports recording track content based on time range
+
+### 📝 State Management
+- Operation history tracking with detailed logs
+- Snapshot creation for critical operations
+- Support for operation rollback (especially for note operations)
+- Browse and restore previous states
+
+### 🔌 Device Management
+- Load audio effects, instruments and plugins
+- Modify device parameters
+- Browse available devices in the library
 
 ## 📥 Installation
 
@@ -52,6 +64,12 @@
    - [Cursor](https://www.cursor.com)
    - [Cherry Studio](https://github.com/CherryHQ/cherry-studio)
    - Claude Desktop
+
+### Environment Variables
+
+You can configure the following environment variables:
+
+- `BASE_PATH`: Specify a custom path for logs and data storage (default: user's home directory)
 
 ### Cursor Configuration Example
 

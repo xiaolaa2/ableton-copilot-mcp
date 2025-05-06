@@ -3,61 +3,54 @@
 All notable changes to this project will be documented in this file.
 
 ## [0.4.0] - 2025-04-29
-- 支持通过mcp env参数 BASE_PATH 来指定mcp的日志和数据文件存储路径
+- Added support for BASE_PATH environment variable to specify log and data file storage path for MCP
+- Introduced database migration system with initial migration setup
+- Implemented operation history and snapshot features for better state management
+- Refactored tools and utilities for improved performance and maintainability
+- Updated ESLint configuration for better code quality
+- Removed pnpm lock file and switched to yarn for package management
+- Added new tools for browser and device management in Ableton
+- Enhanced error handling and performance monitoring capabilities
+- Fixed database migration table name inconsistencies to match entity definitions
+- Corrected field names and types in initial migration script
+- Improved database schema synchronization between models and migrations
+- Resolved redundant database backup creation issue
 
-## [0.3.2] - 未发布
-
-### 优化
-- 优化工具执行性能，添加性能监控功能
-- 添加对象缓存系统，提高重复操作的性能
-- 增强错误处理系统，提供更标准化的错误响应
-- 添加数据库连接失败重试机制
-- 为SQLite添加WAL模式，提高并发性能
-- 添加异常预防和全局未捕获异常处理机制
-- 优化服务启动流程，提供更好的状态反馈
-- 扩展Result类，支持更丰富的返回值类型
 
 ## [0.3.1] - 2023-10-25
 
-### 新功能
+### Added
+- Added device parameter modification functionality
+- Added recording control support
 
-- 添加修改器件参数的功能
-- 支持录音控制
-
-### Bug修复
-
-- 修复应用启动时日志目录不存在的问题
-- 修复MIDI录制错误处理
+### Fixed
+- Fixed missing log directory issue at application startup
+- Fixed MIDI recording error handling
 
 ## [0.3.0] - 2023-10-22
 
-### 新功能
+### Added
+- Added operation history feature with rollback support
+- Added snapshot functionality
 
-- 增加历史记录功能，支持操作历史记录和回滚
-- 增加快照功能
-
-### 优化
-
-- 改进错误处理
+### Improved
+- Improved error handling
 
 ## [0.2.0] - 2023-10-20
 
-### 新功能
+### Added
+- Added audio clip creation functionality
+- Added device deletion capability
 
-- 添加创建音频片段的功能
-- 添加删除设备的功能
-
-### Bug修复
-
-- 修复创建轨道时的索引问题
+### Fixed
+- Fixed track creation index issues
 
 ## [0.1.0] - 2023-10-18
 
-### 初始发布
-
-- 基本的Ableton Live控制功能
-- 支持MCP协议
-- 基础工具集
+### Initial Release
+- Basic Ableton Live control functionality
+- MCP protocol support
+- Base toolset implementation
 
 ## [0.1.2] - Initial Release
 
