@@ -2,17 +2,28 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.4.3] - 2025-05-6
+## [0.5.0] -2025-06-07
+### Added
+- Implemented database functionality with TypeORM
+  - Added database initialization and migration handling
+  - Introduced OperationHistory and Snapshot entities for tracking operations and snapshots
+  - Implemented create, update, and rollback functionalities for operation histories and snapshots
+  - Enhanced clip tools to support snapshot creation during note operations
+  - Updated main application flow to initialize the database and handle migrations
+  - Added migration scripts for initial database setup
+  - Used sql.js as TypeORM database driver to avoid Python dependency for SQLite compilation
+
+## [0.4.3] - 2025-05-06
 - Temporarily removed operation rollback feature to prevent exceptions during MCP server installation due to SQLite third-party library compilation issues
 - Fixed delete_track functionality not working when input parameter is audio
 
-## [0.4.2] - 2025-05-6
+## [0.4.2] - 2025-05-06
 - fix som bugs
 
-## [0.4.1] - 2025-05-6
+## [0.4.1] - 2025-05-06
 - fix som bugs
 
-## [0.4.0] - 2025-05-6
+## [0.4.0] - 2025-05-06
 - Added support for BASE_PATH environment variable to specify log and data file storage path for MCP
 - Introduced database migration system with initial migration setup
 - Implemented operation history and snapshot features for better state management
