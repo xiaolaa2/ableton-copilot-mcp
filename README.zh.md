@@ -78,7 +78,12 @@
 
 您可以配置以下环境变量：
 
-- `BASE_PATH`: 指定自定义的日志和数据存储路径（默认为用户主目录）
+- `BASE_PATH`: 指定自定义的日志和数据存储路径（默认为 Windows 上的 `C:\Users\<您的用户名>\.ableton-copilot-mcp` 或 Linux/Mac 上的 `/home/<您的用户名>/.ableton-copilot-mcp`）。此目录用于存储：
+  - 日志文件：包含操作日志和应用状态记录
+  - 数据库文件：存储项目历史记录、之前的状态和其他持久化数据
+  - 应用程序在会话之间需要维护的任何其他数据
+
+设置此变量可以让您控制应用程序数据的存储位置，这对于备份目的或在使用多种配置时非常有用。
 
 ### Cursor 配置示例
 <span style="color: red">目前 Cursor 最多仅支持40个mcp tool，有可能会导致部分功能不可用</span>
@@ -92,6 +97,33 @@
         "-y",
         "@xiaolaa2/ableton-copilot-mcp"
     ]
+}
+```
+
+如果想获取最新功能，可以使用 @latest 标签：
+
+```json
+"ableton-js-mcp": {
+    "command": "npx",
+    "args": [
+        "-y",
+        "@xiaolaa2/ableton-copilot-mcp@latest"
+    ]
+}
+```
+
+使用自定义 BASE_PATH 配置：
+
+```json
+"ableton-js-mcp": {
+    "command": "npx",
+    "args": [
+        "-y",
+        "@xiaolaa2/ableton-copilot-mcp"
+    ],
+    "env": {
+        "BASE_PATH": "D:\\ableton_copilot_mcp"
+    }
 }
 ```
 

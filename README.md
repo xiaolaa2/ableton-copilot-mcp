@@ -80,7 +80,12 @@ As a music producer myself, I understand the challenges and needs during the mus
 
 You can configure the following environment variables:
 
-- `BASE_PATH`: Specify a custom path for logs and data storage (default: user's home directory)
+- `BASE_PATH`: Specify a custom path for logs and data storage (default: `C:\Users\<YourUsername>\.ableton-copilot-mcp` on Windows or `/home/<YourUsername>/.ableton-copilot-mcp` on Linux/Mac). This directory stores:
+  - Log files: Contains operation logs and application status records
+  - Database file: Stores project history, previous states, and other persistent data
+  - Any additional data the application needs to maintain between sessions
+
+Setting this variable allows you to control where application data is stored, which is useful for backup purposes or when working with multiple configurations.
 
 ### Cursor Configuration Example
 
@@ -95,6 +100,33 @@ Configure ableton-copilot-mcp in Cursor:
         "-y",
         "@xiaolaa2/ableton-copilot-mcp"
     ]
+}
+```
+
+For the latest features, you can use the @latest tag:
+
+```json
+"ableton-js-mcp": {
+    "command": "npx",
+    "args": [
+        "-y",
+        "@xiaolaa2/ableton-copilot-mcp@latest"
+    ]
+}
+```
+
+With custom BASE_PATH configuration:
+
+```json
+"ableton-js-mcp": {
+    "command": "npx",
+    "args": [
+        "-y",
+        "@xiaolaa2/ableton-copilot-mcp"
+    ],
+    "env": {
+        "BASE_PATH": "D:\\ableton_copilot_mcp"
+    }
 }
 ```
 
