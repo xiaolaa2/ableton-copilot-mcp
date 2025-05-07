@@ -4,7 +4,7 @@ import { Note } from 'ableton-js/util/note.js'
 import { NOTE, ClipSettableProp, ClipGettableProp } from '../types/zod-types.js'
 import { batchModifyClipProp, getClipProps } from '../utils/obj-utils.js'
 import { getClipById, Result } from '../utils/common.js'
-import { removeNotesExtended } from '../utils/clip-utils.js'
+import { createNoteSnapshot, removeNotesExtended } from '../utils/clip-utils.js'
 
 class ClipTools {
 
@@ -33,14 +33,16 @@ class ClipTools {
             time_span: z.number().describe('The number of beats to remove. Must be a value greater than 0.'),
         }
     })
-    async removeClipNotes({ clip_id, from_pitch, pitch_span, from_time, time_span }: {
+    async removeClipNotes({ clip_id, from_pitch, pitch_span, from_time, time_span, historyId }: {
         clip_id: string
         from_pitch: number
         pitch_span: number
         from_time: number
         time_span: number
+        historyId: number
     }) {
         const clip = getClipById(clip_id)
+        await createNoteSnapshot(clip, historyId)
         await removeNotesExtended(clip, from_pitch, pitch_span, from_time, time_span)
         return Result.ok()
     }
@@ -54,8 +56,9 @@ class ClipTools {
             clip_id: z.string()
         }
     })
-    async addClipNotes({ notes, clip_id}: { notes: Note[], clip_id: string }) {
+    async addClipNotes({ notes, clip_id, historyId }: { notes: Note[], clip_id: string, historyId: number }) {
         const clip = getClipById(clip_id)
+        await createNoteSnapshot(clip, historyId)
         await clip.setNotes(notes)
         return Result.ok()
     }
@@ -69,8 +72,9 @@ class ClipTools {
             clip_id: z.string()
         }
     })
-    async replaceAllDetailClipNotes({ notes, clip_id }: { notes: Note[], clip_id: string }) {
+    async replaceAllDetailClipNotes({ notes, clip_id, historyId }: { notes: Note[], clip_id: string, historyId: number }) {
         const clip = getClipById(clip_id)
+        await createNoteSnapshot(clip, historyId)
         await clip.selectAllNotes()
         await clip.replaceSelectedNotes(notes)
         return Result.ok()

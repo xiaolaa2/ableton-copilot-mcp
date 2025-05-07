@@ -2,13 +2,16 @@ import { startServer as startMcp } from './mcp/core.js'
 import { createLogger } from './utils/logger.js'
 import path from 'path'
 import { initAbleton } from './ableton.js'
+import { initializeDataSource } from './db.js'
 import os from 'os'
 import BrowserTools from './tools/browser-tools.js'
 import ClipTools from './tools/clip-tools.js'
 import DeviceTools from './tools/device-tools.js'
+import HistoryTools from './tools/history-tools.js'
 import SongTools from './tools/song-tools.js'
 import TrackTools from './tools/track-tools.js'
 import PerformanceMonitor from './utils/performance-monitor.js'
+import fs from 'fs'
 
 // Set environment variables
 process.env.NODE_OPTIONS = process.env.NODE_OPTIONS || '--max-old-space-size=4096'
@@ -17,24 +20,30 @@ process.env.NODE_OPTIONS = process.env.NODE_OPTIONS || '--max-old-space-size=409
 const basePath = process.env.BASE_PATH || path.join(os.homedir(), '.ableton-copilot-mcp')
 
 const logFile = path.join(basePath, 'logs', 'ableton.log')
+const dbFile = path.join(basePath, 'data.db')
 
 export const logger = createLogger(logFile)
 
-// Ensure directory exists
-import fs from 'fs'
 const logsDir = path.join(basePath, 'logs')
 if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir, { recursive: true })
 }
 
-// Start MCP server
-await startMcp({
-    // Register tool classes
-    tools: [BrowserTools, ClipTools, DeviceTools, SongTools, TrackTools]
-})
+try {
+    // Initialize database
+    await initializeDataSource(dbFile)
 
-// Initialize Ableton connection
-await initAbleton(logger)
+    // Start MCP server
+    await startMcp({
+        // Register tool classes, make decorators available
+        tools: [BrowserTools, ClipTools, DeviceTools, HistoryTools, SongTools, TrackTools]
+    })
+
+    // Initialize Ableton connection
+    await initAbleton(logger)
+} catch (error) {
+    logger.error('Error initializing Ableton Copilot MCP:', error)
+}
 
 // Set up performance monitoring timer
 setInterval(() => {
