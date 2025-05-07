@@ -11,6 +11,7 @@ import HistoryTools from './tools/history-tools.js'
 import SongTools from './tools/song-tools.js'
 import TrackTools from './tools/track-tools.js'
 import PerformanceMonitor from './utils/performance-monitor.js'
+import fs from 'fs'
 
 // Set environment variables
 process.env.NODE_OPTIONS = process.env.NODE_OPTIONS || '--max-old-space-size=4096'
@@ -23,24 +24,26 @@ const dbFile = path.join(basePath, 'data.db')
 
 export const logger = createLogger(logFile)
 
-// Ensure directory exists
-import fs from 'fs'
 const logsDir = path.join(basePath, 'logs')
 if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir, { recursive: true })
 }
 
-// Initialize database
-await initializeDataSource(dbFile)
+try {
+    // Initialize database
+    await initializeDataSource(dbFile)
 
-// Start MCP server
-await startMcp({
-    // Register tool classes
-    tools: [BrowserTools, ClipTools, DeviceTools, HistoryTools, SongTools, TrackTools]
-})
+    // Start MCP server
+    await startMcp({
+        // Register tool classes, make decorators available
+        tools: [BrowserTools, ClipTools, DeviceTools, HistoryTools, SongTools, TrackTools]
+    })
 
-// Initialize Ableton connection
-await initAbleton(logger)
+    // Initialize Ableton connection
+    await initAbleton(logger)
+} catch (error) {
+    logger.error('Error initializing Ableton Copilot MCP:', error)
+}
 
 // Set up performance monitoring timer
 setInterval(() => {
