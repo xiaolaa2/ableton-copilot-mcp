@@ -42,8 +42,13 @@ As a music producer myself, I understand the challenges and needs during the mus
 - Modify device parameters
 - Browse available devices in the library
 
+### 📝 State Management
+- Operation history tracking and detailed logging
+- Snapshot creation for critical operations
+- Support for operation rollback (especially for note operations)
+- Browse and restore previous states
+
 ## 📝 To-Do List
-- Improve state management stability, support creating snapshots for states (midi, note), and support rollback of operations such as notes
 - Allow returning the created clip_id when creating midi clips (pending ableton-js update)
 - Support automatic envelope adjustment
 
