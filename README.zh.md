@@ -11,7 +11,7 @@
 
 ## 🎯 注意
 
-作为一名音乐制作人，我也许理解音乐创作过程中的挑战与需求。本工具旨在为Ableton使用者提供一套智能且实用的辅助系统，让创作过程更加自然流畅。我始终坚持"辅助创作"的核心理念，而非盲目追求让AI直接生成出完整的音符 —— 真正打动人心的音乐作品永远离不开人类独特的创造力与艺术感知，这是当前 AI 技术尚无法企及的领域。
+作为一名音乐制作人，我对使用Ableton来创作音乐有一些理解。其实在创作音乐的时候我们经常会需要解决一些比较繁琐的操作，比如音符属性人性化、合并音符、把一个轨道录制到另外一个音频轨道等，以前我们只能依赖于宿主DAW自己提供的一些功能来进行这些操作，但是现在大模型和MCP出现之后我们有了可以让AI帮我们进行自动化操作的可能性，尽管目前让AI直接生成音符、创作一首完整歌曲仍不太现实，它不能够生成出一个好听的歌曲，但让AI来帮我们进行辅助操作也是一种新的可能。
 
 ## 🚀 功能特性
 
@@ -23,7 +23,7 @@
 
 ### 🎹 音轨管理（Track）
 - 获取音轨中的所有片段
-- 在轨道中创建空白 MIDI 片段
+- 在编排视图的轨道中创建空白 MIDI 片段
 - 在轨道中根据给出的采样文件路径创建音频片段
 - 设置音轨属性（静音、颜色、名称等）
 - 复制 MIDI 片段到指定音轨
@@ -56,66 +56,65 @@
 
 ## 📥 安装
 
-1. 安装 **Node.js**：确保 npx 命令可以正常运行，建议前往 [Node.js 官网](https://nodejs.org/) 安装最新的稳定版本
+### 必备条件 
+- **Node.js** 环境：确保已安装 Node.js（建议 v20+），并可正常使用 `npx` 命令
+  > 🔗 下载链接：[Node.js 官网](https://nodejs.org/)
 
-2. 安装 **MIDI Remote Scripts**：
-   您可以通过以下三种方式安装 MIDI Remote Scripts:
+### 安装步骤
 
-   - **命令行安装（推荐）**：
-     运行以下命令自动安装 MIDI Remote Scripts：
-     ```bash
-     npx @xiaolaa2/ableton-copilot-mcp --install-scripts
-     # 或使用简短形式
-     npx @xiaolaa2/ableton-copilot-mcp -is
-     ```
+#### 1. 安装 AbletonJS MIDI Remote Scripts
 
-   - 先启动 ableton-copilot-mcp（参考使用方法部分），然后让AI或手动调用 MCP tool `init_ableton_js` 工具帮您自动安装
+选择以下**三种方式之一**安装 MIDI Remote Scripts：
+
+- **方式一：命令行一键安装（推荐）**  
+  ```bash
+  npx @xiaolaa2/ableton-copilot-mcp --install-scripts
+  # 或使用简短形式
+  npx @xiaolaa2/ableton-copilot-mcp -is
+  ```
+
+- **方式二：工具辅助安装**  
+  1. 先启动 ableton-copilot-mcp（见下方使用方法）
+  2. 让 AI 助手或手动调用 MCP 工具 `init_ableton_js` 完成自动安装
    
-   - 手动安装:
-     1. 在用户库中手动创建名为"Remote Scripts"的文件夹
-        默认用户库位置:
-        - **Windows**: `C:\Users\[username]\Documents\Ableton\User Library`
-        - **Mac**: `/Users/[username]/Music/Ableton/User Library`
-     2. 从 [ableton-js](https://github.com/leolabs/ableton-js) 项目下载 MIDI Remote Scripts
-     3. 将 `midi-script` 文件夹复制到 [Ableton Live 的 MIDI Remote Scripts 目录](https://help.ableton.com/hc/en-us/articles/209072009-Installing-third-party-remote-scripts)
-     4. 重命名为 `AbletonJS`
+- **方式三：手动安装**  
+  1. 在 Ableton 用户库中创建 "Remote Scripts" 文件夹：
+     - Windows: `C:\Users\[用户名]\Documents\Ableton\User Library\Remote Scripts`
+     - Mac: `/Users/[用户名]/Music/Ableton/User Library/Remote Scripts`
+  2. 从 [ableton-js](https://github.com/leolabs/ableton-js) 项目下载 MIDI Remote Scripts
+  3. 将下载的 `midi-script` 文件夹复制到上述位置
+  4. 将文件夹重命名为 `AbletonJS`
 
 ## 🔧 使用方法
 
-1. 确保 Ableton Live 已经启动并运行
-2. 确保在配置中启用 AbletonJS 控制界面：
-   > **路径**：Settings -> Link, Tempo & MIDI -> MIDI -> Control Surface
+### 快速开始
+
+1. **启动 Ableton Live**
+
+2. **启用 AbletonJS 控制界面**
+   - 打开 Ableton Live 设置：`Preferences` → `Link/MIDI`
+   - 在 `MIDI` 标签页，找到 `Control Surface` 区域
+   - 从下拉菜单中选择 `AbletonJS`
 
    <div align="center">
      <img src="./assets/images/setting.jpg" alt="Ableton Live MIDI Remote Scripts 配置" width="80%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
      <p><em>图1：Ableton Live 中启用 AbletonJS 控制界面</em></p>
    </div>
 
-3. 使用 MCP 客户端连接，支持的客户端包括但不限于：
+3. **连接 MCP 客户端**
+   
+   以下客户端均可作为 MCP 接入点：
    - [Cursor](https://www.cursor.com)
    - [Cherry Studio](https://github.com/CherryHQ/cherry-studio)
    - Claude Desktop
+   - 其它MCP客户端
 
-示例：
-```bash
-npx @xiaolaa2/ableton-copilot-mcp --install-scripts
-```
 
-### 环境变量
+### 客户端配置
 
-您可以配置以下环境变量：
+#### Cursor 配置示例
 
-- `BASE_PATH`: 指定自定义的日志和数据存储路径（默认为 Windows 上的 `C:\Users\<您的用户名>\.ableton-copilot-mcp` 或 Linux/Mac 上的 `/home/<您的用户名>/.ableton-copilot-mcp`）。此目录用于存储：
-  - 日志文件：包含操作日志和应用状态记录
-  - 数据库文件：存储项目历史记录、之前的状态和其他持久化数据
-  - 应用程序在会话之间需要维护的任何其他数据
-
-设置此变量可以让您控制应用程序数据的存储位置，这对于备份目的或在使用多种配置时非常有用。
-
-### Cursor 配置示例
-<span style="color: red">目前 Cursor 最多仅支持40个mcp tool，有可能会导致部分功能不可用</span>
-
-在 Cursor 中配置 ableton-copilot-mcp：
+在 Cursor 设置中添加以下配置：
 
 ```json
 "ableton-js-mcp": {
@@ -127,7 +126,7 @@ npx @xiaolaa2/ableton-copilot-mcp --install-scripts
 }
 ```
 
-如果想获取最新功能，可以使用 @latest 标签：
+如需使用最新版本：
 
 ```json
 "ableton-js-mcp": {
@@ -139,7 +138,9 @@ npx @xiaolaa2/ableton-copilot-mcp --install-scripts
 }
 ```
 
-使用环境参数配置：
+#### 自定义数据存储路径（可选）
+
+您可以通过环境变量 `BASE_PATH` 指定自定义数据存储位置：
 
 ```json
 "ableton-js-mcp": {
@@ -153,6 +154,9 @@ npx @xiaolaa2/ableton-copilot-mcp --install-scripts
     }
 }
 ```
+
+> 💡 **提示**：存储路径用于保存日志文件、操作历史和状态快照等数据
+
 
 ## ✅ 兼容性测试
 
@@ -171,3 +175,6 @@ npx @xiaolaa2/ableton-copilot-mcp --install-scripts
 ## 📄 许可证
 
 本项目采用 [MIT 许可证](./LICENSE)。
+
+## ⚠️ 免责声明
+这是一个第三方集成项目，并非由 Ableton 官方开发。

@@ -11,7 +11,7 @@
 
 ## 🎯 Note
 
-As a music producer myself, I understand the challenges and needs during the music creation process. This tool aims to provide Ableton users with an intelligent and practical auxiliary system to make the creative process more natural and smooth. I always adhere to the core concept of "assisting creation" rather than blindly pursuing AI to generate complete musical notes – truly moving musical works are inseparable from unique human creativity and artistic perception, which is currently beyond the reach of AI technology.
+As a music producer, I have some understanding of using Ableton for music creation. During the creative process, we often need to handle various tedious operations, such as humanizing note properties, merging notes, recording one track to another audio track, etc. Previously, we could only rely on the functions provided by the host DAW for these operations. However, with the emergence of large language models and MCP, we now have the possibility to let AI help us with automation. Although it's still not realistic for AI to directly generate notes or create a complete song (it can't generate a good-sounding song), having AI assist us with auxiliary operations presents a new possibility.
 
 ## 🚀 Features
 
@@ -23,7 +23,7 @@ As a music producer myself, I understand the challenges and needs during the mus
 
 ### 🎹 Track Management
 - Get all clips in a track
-- Create empty MIDI clips
+- Create empty MIDI clips in the arrangement view tracks
 - Create audio clips in tracks based on provided sample file paths
 - Set track properties (mute, color, name, arm, solo, etc.)
 - Duplicate MIDI clips to specified tracks
@@ -56,62 +56,64 @@ As a music producer myself, I understand the challenges and needs during the mus
 - Direct manipulation of MIDI clips by AI may result in the loss of original notes and cannot be undone with Ctrl + Z. Please operate with caution. If needed, you can ask the AI to help you roll back note operations.
 ## 📥 Installation
 
-1. Install **Node.js**: Make sure the npx command is available. It's recommended to install the latest stable version from the [Node.js official website](https://nodejs.org/)
+### Prerequisites
+- **Node.js** environment: Ensure Node.js is installed (v20+ recommended) and the `npx` command is available
+  > 🔗 Download: [Node.js official website](https://nodejs.org/)
 
-2. Install **MIDI Remote Scripts**:
-   You can install MIDI Remote Scripts in three ways:
+### Installation Steps
 
-   - **Command Line Installation (Recommended)**:
-     Run the following command to automatically install the MIDI Remote Scripts:
-     ```bash
-     npx @xiaolaa2/ableton-copilot-mcp --install-scripts
-     # or use the short form
-     npx @xiaolaa2/ableton-copilot-mcp -is
-     ```
+#### 1. Install AbletonJS MIDI Remote Scripts
 
-   - Start ableton-copilot-mcp (refer to Usage section) first, then let AI or manually call the MCP tool `init_ableton_js` to help you install automatically
+Choose **ONE** of the following three methods to install MIDI Remote Scripts:
+
+- **Method 1: One-line installation (Recommended)**  
+  ```bash
+  npx @xiaolaa2/ableton-copilot-mcp --install-scripts
+  # or use the short form
+  npx @xiaolaa2/ableton-copilot-mcp -is
+  ```
+
+- **Method 2: Tool-assisted installation**  
+  1. First, start ableton-copilot-mcp (see Usage section below)
+  2. Let AI assistant or manually call the MCP tool `init_ableton_js` to complete the installation automatically
    
-   - Manual installation:
-     1. Manually create a folder called "Remote Scripts" within your User Library
-        The default User Library location:
-        - **Windows**: `C:\Users\[username]\Documents\Ableton\User Library`
-        - **Mac**: `/Users/[username]/Music/Ableton/User Library`
-     2. Download MIDI Remote Scripts from the [ableton-js](https://github.com/leolabs/ableton-js) project
-     3. Copy the `midi-script` folder to [Ableton Live's MIDI Remote Scripts directory](https://help.ableton.com/hc/en-us/articles/209072009-Installing-third-party-remote-scripts)
-     4. Rename it to `AbletonJS`
+- **Method 3: Manual installation**  
+  1. Create a folder named "Remote Scripts" in your Ableton User Library:
+     - Windows: `C:\Users\[username]\Documents\Ableton\User Library\Remote Scripts`
+     - Mac: `/Users/[username]/Music/Ableton/User Library\Remote Scripts`
+  2. Download MIDI Remote Scripts from the [ableton-js](https://github.com/leolabs/ableton-js) project
+  3. Copy the downloaded `midi-script` folder to the location above
+  4. Rename it to `AbletonJS`
 
 ## 🔧 Usage
 
-1. Ensure that Ableton Live is launched and running
-2. Make sure AbletonJS Control Surface is enabled in your configuration:
-   > **Path**: Settings -> Link, Tempo & MIDI -> MIDI -> Control Surface
+### Quick Start
+
+1. **Launch Ableton Live**
+
+2. **Enable AbletonJS Control Surface**
+   - Open Ableton Live Preferences: `Preferences` → `Link/MIDI`
+   - In the `MIDI` tab, locate the `Control Surface` section
+   - Select `AbletonJS` from the dropdown menu
 
    <div align="center">
      <img src="./assets/images/setting.jpg" alt="Ableton Live MIDI Remote Scripts Configuration" width="80%" style="border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
      <p><em>Figure 1: Enabling AbletonJS Control Surface in Ableton Live Configuration</em></p>
    </div>
 
-3. Connect using an MCP client, including but not limited to:
+3. **Connect using an MCP client**
+   
+   The following clients can be used as MCP endpoints:
    - [Cursor](https://www.cursor.com)
    - [Cherry Studio](https://github.com/CherryHQ/cherry-studio)
    - Claude Desktop
+   - Other MCP clients
 
-### Environment Variables
+### Client Configuration
 
-You can configure the following environment variables:
+#### Cursor Configuration Example
 
-- `BASE_PATH`: Specify a custom path for logs and data storage (default: `C:\Users\<YourUsername>\.ableton-copilot-mcp` on Windows or `/home/<YourUsername>/.ableton-copilot-mcp` on Linux/Mac). This directory stores:
-  - Log files: Contains operation logs and application status records
-  - Database file: Stores project history, previous states, and other persistent data
-  - Any additional data the application needs to maintain between sessions
-
-Setting this variable allows you to control where application data is stored, which is useful for backup purposes or when working with multiple configurations.
-
-### Cursor Configuration Example
-
-Configure ableton-copilot-mcp in Cursor:
-
-<span style="color: red">Currently, Cursor supports a maximum of 40 MCP tools, which may cause some features to be unavailable.</span>
+Add the following configuration to your Cursor settings:
 
 ```json
 "ableton-js-mcp": {
@@ -123,7 +125,7 @@ Configure ableton-copilot-mcp in Cursor:
 }
 ```
 
-For the latest features, you can use the @latest tag:
+For the latest version:
 
 ```json
 "ableton-js-mcp": {
@@ -135,7 +137,9 @@ For the latest features, you can use the @latest tag:
 }
 ```
 
-With custom BASE_PATH configuration:
+#### Custom Storage Path (Optional)
+
+You can specify a custom data storage location using the `BASE_PATH` environment variable:
 
 ```json
 "ableton-js-mcp": {
@@ -149,6 +153,14 @@ With custom BASE_PATH configuration:
     }
 }
 ```
+
+> 💡 **Tip**: The storage path is used to save log files, operation history, and state snapshots
+
+### Usage Tips
+
+- When connecting for the first time, it may take a few seconds to establish communication with Ableton Live
+- Make sure Ableton Live is running and the AbletonJS Control Surface is properly loaded
+- To check the connection status, you can use the `get_song_status` command in the MCP tools
 
 ## ✅ Compatibility Testing
 
@@ -167,3 +179,6 @@ Issues and contributions are welcome. Please submit issues or suggestions throug
 ## 📄 License
 
 This project is licensed under the [MIT License](./LICENSE).
+
+## ⚠️ Disclaimer
+This is a third-party integration and not made by Ableton.
