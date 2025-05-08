@@ -13,14 +13,15 @@ async function processToolReq(
     argsObj: object,
     originalFunc: (...args: any[]) => Promise<object>,
     toolName: string,
-    enableSnapshot: boolean = false
+    enableSnapshot: boolean = false,
+    skipAbletonCheck: boolean = false
 ): Promise<CallToolResult | Promise<CallToolResult>> {
     let historyId = null
     const startTime = performance.now()
     
     try {
         // Check Ableton connection status
-        if (!ableton.isConnected()) {
+        if (!skipAbletonCheck && !ableton.isConnected()) {
             throw ErrorTypes.ABLETON_ERROR('Ableton is not connected, please check if Ableton is running.')
         }
 
@@ -104,6 +105,7 @@ export function tool(options?: {
     description?: string,
     enableSnapshot?: boolean, // Enable snapshot mode - when enabled, operation records will be saved and historyId will be passed to the function for snapshot creation
     paramsSchema?: ZodRawShape
+    skipAbletonCheck?: boolean
 }) {
     return function (_: object, propertyKey: string, descriptor: PropertyDescriptor) {
         let func
@@ -126,7 +128,7 @@ export function tool(options?: {
                     options.description ?? '',
                     options.paramsSchema ?? {},
                     async (args) => {
-                        return await processToolReq(args, originalFunc, toolName, options.enableSnapshot)
+                        return await processToolReq(args, originalFunc, toolName, options.enableSnapshot, options.skipAbletonCheck)
                     }
                 )
             }

@@ -2,7 +2,7 @@ import { logger } from '../main.js'
 import { getOperationHistoryRepository, getSnapshotRepository } from '../db.js'
 import { OperationHistory } from '../entities/OperationHistory.js'
 import { NoteSnapshotData, Snapshot, SnapshotType } from '../entities/Snapshot.js'
-import { getClipById } from './common.js'
+import { getClipById } from './obj-utils.js'
 import { FindOneOptions } from 'typeorm'
 import { removeAllNotes } from './clip-utils.js'
 

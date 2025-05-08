@@ -1,6 +1,6 @@
 import { Browser } from 'ableton-js/ns/browser.js'
 import { ableton } from '../ableton.js'
-import { getBrowserItemById } from './common.js'
+import { getBrowserItemById } from './obj-utils.js'
 import { BrowserItem } from 'ableton-js/ns/browser-item.js'
 
 export enum ResourceType {

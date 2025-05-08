@@ -3,7 +3,8 @@ import { z } from 'zod'
 import { Note } from 'ableton-js/util/note.js'
 import { NOTE, ClipSettableProp, ClipGettableProp } from '../types/zod-types.js'
 import { batchModifyClipProp, getClipProps } from '../utils/obj-utils.js'
-import { getClipById, Result } from '../utils/common.js'
+import { Result } from '../utils/common.js'
+import { getClipById } from '../utils/obj-utils.js'
 import { createNoteSnapshot, removeNotesExtended } from '../utils/clip-utils.js'
 
 class ClipTools {

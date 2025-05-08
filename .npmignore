@@ -40,3 +40,5 @@ yarn.lock
 # Misc
 .DS_Store
 Thumbs.db
+
+.yarn

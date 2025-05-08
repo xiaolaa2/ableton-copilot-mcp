@@ -30,7 +30,7 @@ export async function verifyMigrationsTable(dataSource: DataSource): Promise<boo
             SELECT name FROM sqlite_master 
             WHERE type='table' AND name='migrations'
         `)
-        
+
         return tableExists.length > 0
     } catch (error) {
         logger.error('Error verifying migrations table:', error)
@@ -78,32 +78,32 @@ function directoryHasMigrations(dir: string): boolean {
 export function ensureMigrationsDir(): string {
     // Get current script path (works in ESM)
     const currentFilePath = fileURLToPath(import.meta.url)
-    logger.info(`Current script path: ${currentFilePath}`)
-    
+    logger.debug(`Current script path: ${currentFilePath}`)
+
     // Calculate migrations directory path relative to this script
     // This script is in src/utils or dist/utils, so we need to go up two levels
     const scriptDir = path.dirname(currentFilePath)
     const projectRoot = path.dirname(path.dirname(scriptDir))
-    
+
     // The migrations directory should be in dist/migrations
     const migrationsDir = path.join(projectRoot, 'dist', 'migrations')
-    logger.info(`Looking for migrations in: ${migrationsDir}`)
-    
+    logger.debug(`Looking for migrations in: ${migrationsDir}`)
+
     // Check if directory exists and has migrations
     if (directoryHasMigrations(migrationsDir)) {
-        logger.info(`Using migrations directory at ${migrationsDir}`)
+        logger.debug(`Using migrations directory at ${migrationsDir}`)
         return migrationsDir
     }
-    
+
     // If directory doesn't exist, create it
     if (!fs.existsSync(migrationsDir)) {
         try {
             fs.mkdirSync(migrationsDir, { recursive: true })
-            logger.info(`Created migrations directory at ${migrationsDir}`)
+            logger.debug(`Created migrations directory at ${migrationsDir}`)
         } catch (error) {
             logger.warn(`Could not create migrations directory at ${migrationsDir}:`, error)
         }
     }
-    
+
     return migrationsDir
 } 

@@ -1,6 +1,7 @@
 import { z } from 'zod'
 import { tool } from '../mcp/decorators/tool.js'
-import { getDeviceById, getDeviceParameterById, Result } from '../utils/common.js'
+import { Result } from '../utils/common.js'
+import { getDeviceById, getDeviceParameterById } from '../utils/obj-utils.js'
 import { getDeviceProps, modifyDeviceParameterVal } from '../utils/obj-utils.js'
 import { DeviceGettableProperties } from '../types/zod-types.js'
 

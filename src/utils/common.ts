@@ -1,187 +1,33 @@
-import { RawTrack, Track } from 'ableton-js/ns/track.js'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { z } from 'zod'
-import { Clip, RawClip } from 'ableton-js/ns/clip.js'
-import { ableton } from '../ableton.js'
-import { BrowserItem, RawBrowserItem } from 'ableton-js/ns/browser-item.js'
-import { Device, DeviceType, RawDevice } from 'ableton-js/ns/device.js'
-import { DeviceParameter, RawDeviceParameter } from 'ableton-js/ns/device-parameter.js'
+import fs from 'fs'
+import os from 'os'
+import { logger } from '../main.js'
 import { ErrorTypes } from '../mcp/error-handler.js'
+import { createRequire } from 'module'
 
 /**
- * 获取原始Track对象
- * @param trackId 轨道ID
- * @returns 原始Track对象
- */
-export function getRawTrackById(trackId: string): RawTrack {
-    if (!trackId) {
-        throw ErrorTypes.INVALID_ARGUMENT('Track ID is required')
-    }
-    
-    return {
-        id: trackId,
-        name: '',
-        color: 0,
-        color_index: 0,
-        is_foldable: false,
-        is_grouped: false,
-        mute: false,
-        solo: false,
-    }
-}
-
-/**
- * 获取Track对象
- * @param trackId 轨道ID
- * @returns Track对象
- */
-export function getTrackById(trackId: string): Track {
-    const rawTrack = getRawTrackById(trackId)
-    return new Track(ableton, rawTrack)
-}
-
-/**
- * 获取原始Clip对象
- * @param clipId 片段ID
- * @returns 原始Clip对象
- */
-export function getRawClipById(clipId: string): RawClip {
-    if (!clipId) {
-        throw ErrorTypes.INVALID_ARGUMENT('Clip ID is required')
-    }
-    
-    return {
-        id: clipId,
-        name: '',
-        color: 0,
-        color_index: 0,
-        is_audio_clip: false,
-        is_midi_clip: false,
-        start_time: 0,
-        end_time: 0,
-        muted: false,
-    }
-}
-
-/**
- * 获取Clip对象
- * @param clipId 片段ID
- * @returns Clip对象
- */
-export function getClipById(clipId: string): Clip {
-    const rawClip = getRawClipById(clipId)
-    return new Clip(ableton, rawClip)
-}
-
-/**
- * 获取原始浏览器项目对象
- * @param id 项目ID
- * @returns 原始浏览器项目对象
- */
-export function getRawBrowserItemById(id: string): RawBrowserItem {
-    if (!id) {
-        throw ErrorTypes.INVALID_ARGUMENT('Browser item ID is required')
-    }
-    
-    return {
-        id: id,
-        children: [],
-        name: '',
-        is_loadable: false,
-        is_selected: false,
-        is_device: false,
-        is_folder: false,
-        source: '',
-        uri: '',
-    }
-}
-
-/**
- * 获取浏览器项目对象
- * @param id 项目ID
- * @returns 浏览器项目对象
- */
-export function getBrowserItemById(id: string) {
-    const rawBrowserItem = getRawBrowserItemById(id)
-    return new BrowserItem(ableton, rawBrowserItem)
-}
-
-/**
- * 获取原始设备对象
- * @param id 设备ID
- * @returns 原始设备对象
- */
-export function getRawDeviceById(id: string): RawDevice {
-    if (!id) {
-        throw ErrorTypes.INVALID_ARGUMENT('Device ID is required')
-    }
-    
-    return {
-        id: id,
-        name: '',
-        type: DeviceType.Undefined,
-        class_name: '',
-    }
-}
-
-/**
- * 获取原始设备参数对象
- * @param id 参数ID
- * @returns 原始设备参数对象
- */
-export function getRawDeviceParameterById(id: string): RawDeviceParameter {
-    if (!id) {
-        throw ErrorTypes.INVALID_ARGUMENT('Device parameter ID is required')
-    }
-    
-    return {
-        id: id,
-        name: '',
-        value: 0,
-        is_quantized: false,
-    }
-}
-
-/**
- * 获取设备参数对象
- * @param id 参数ID
- * @returns 设备参数对象
- */
-export function getDeviceParameterById(id: string) {
-    const rawDeviceParameter = getRawDeviceParameterById(id)
-    return new DeviceParameter(ableton, rawDeviceParameter)
-}
-
-/**
- * 获取设备对象
- * @param id 设备ID
- * @returns 设备对象
- */
-export function getDeviceById(id: string) {
-    const rawDevice = getRawDeviceById(id)
-    return new Device(ableton, rawDevice)
-}
-
-/**
- * 操作结果类
+ * Result class for operation outcomes
  */
 export class Result {
     static ok(): string {
         return 'ok'
     }
-    
+
     static error(message: string): { error: string } {
         return { error: message }
     }
-    
+
     static data<T>(data: T): { data: T } {
         return { data }
     }
 }
 
 /**
- * 创建Zod模式
- * @param props 属性对象
- * @returns Zod模式
+ * Create a Zod schema
+ * @param props Properties object
+ * @returns Zod schema
  */
 export function createZodSchema<T>(props: {
     [K in keyof T]?: z.ZodTypeAny
@@ -189,4 +35,108 @@ export function createZodSchema<T>(props: {
     return z
         .object(props as z.ZodRawShape)
         .partial()
+}
+
+/**
+ * Recursively copy a folder
+ */
+function copyFolderSync(source: string, target: string) {
+    // Create target folder if it doesn't exist
+    if (!fs.existsSync(target)) {
+        fs.mkdirSync(target, { recursive: true })
+    }
+
+    // Read all items from source folder
+    const items = fs.readdirSync(source)
+
+    // Copy each item
+    for (const item of items) {
+        const sourcePath = path.join(source, item)
+        const targetPath = path.join(target, item)
+        
+        // Check if it's a file or folder
+        const stat = fs.statSync(sourcePath)
+        
+        if (stat.isFile()) {
+            fs.copyFileSync(sourcePath, targetPath)
+        } else if (stat.isDirectory()) {
+            copyFolderSync(sourcePath, targetPath)
+        }
+    }
+}
+
+/**
+ * Copy midi-scripts from ableton-js library to Ableton Live's MIDI Remote Scripts folder
+ */
+export function initAbletonJs() {
+    try {
+        // Use createRequire to get the ableton-js module path
+        const require = createRequire(import.meta.url)
+        let abletonJSPath = ''
+        
+        try {
+            // Try to resolve the ableton-js module path
+            const abletonJsMainPath = require.resolve('ableton-js')
+            // Get the directory of node_modules/ableton-js
+            const abletonJsDir = path.dirname(abletonJsMainPath)
+            // Get the path to the midi-script folder
+            abletonJSPath = path.join(abletonJsDir, 'midi-script')
+            
+            // Verify the path exists
+            if (!fs.existsSync(abletonJSPath)) {
+                throw ErrorTypes.INTERNAL_ERROR(`ableton-js midi-script folder not found: ${abletonJSPath}`)
+            }
+        } catch (resolveError) {
+            // Fall back to relative path method
+            logger.warn(`Failed to resolve ableton-js using require.resolve: ${resolveError instanceof Error ? resolveError.message : String(resolveError)}`)
+            logger.warn('Falling back to relative path method')
+            
+            const currentFilePath = fileURLToPath(import.meta.url)
+            abletonJSPath = path.join(path.dirname(currentFilePath), '../../node_modules/ableton-js/midi-script')
+            
+            if (!fs.existsSync(abletonJSPath)) {
+                throw ErrorTypes.INTERNAL_ERROR(`ableton-js midi-script folder not found in fallback location: ${abletonJSPath}`)
+            }
+        }
+        
+        // Determine User Library path based on operating system
+        const username = os.userInfo().username
+        let userLibraryPath = ''
+        
+        if (process.platform === 'win32') {
+            userLibraryPath = path.join('C:', 'Users', username, 'Documents', 'Ableton', 'User Library')
+        } else if (process.platform === 'darwin') {
+            userLibraryPath = path.join('/Users', username, 'Music', 'Ableton', 'User Library')
+        } else {
+            throw ErrorTypes.INTERNAL_ERROR('Unsupported operating system')
+        }
+        
+        // Create Remote Scripts folder (if it doesn't exist)
+        const remoteScriptsPath = path.join(userLibraryPath, 'Remote Scripts')
+        const abletonJSTargetPath = path.join(remoteScriptsPath, 'AbletonJS')
+        
+        if (!fs.existsSync(remoteScriptsPath)) {
+            fs.mkdirSync(remoteScriptsPath, { recursive: true })
+        }
+        
+        // If target folder exists, delete it first
+        if (fs.existsSync(abletonJSTargetPath)) {
+            fs.rmSync(abletonJSTargetPath, { recursive: true, force: true })
+        }
+        
+        // Copy ableton-js midi-script to target path
+        if (typeof fs.cpSync === 'function') {
+            // Use Node.js v16.7.0+ cpSync
+            fs.cpSync(abletonJSPath, abletonJSTargetPath, { recursive: true })
+        } else {
+            // Compatible with older Node.js versions
+            copyFolderSync(abletonJSPath, abletonJSTargetPath)
+        }
+
+        logger.debug(`AbletonJS paths - Source: ${abletonJSPath}, Target: ${abletonJSTargetPath}`)
+        
+    } catch (error: unknown) {
+        logger.error(error instanceof Error ? error.message : String(error))
+        throw ErrorTypes.INTERNAL_ERROR('init ableton-js error')
+    }
 }
