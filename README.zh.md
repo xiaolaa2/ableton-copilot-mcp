@@ -59,7 +59,15 @@
 1. 安装 **Node.js**：确保 npx 命令可以正常运行，建议前往 [Node.js 官网](https://nodejs.org/) 安装最新的稳定版本
 
 2. 安装 **MIDI Remote Scripts**：
-   您可以通过以下两种方式安装 MIDI Remote Scripts:
+   您可以通过以下三种方式安装 MIDI Remote Scripts:
+
+   - **命令行安装（推荐）**：
+     运行以下命令自动安装 MIDI Remote Scripts：
+     ```bash
+     npx @xiaolaa2/ableton-copilot-mcp --install-scripts
+     # 或使用简短形式
+     npx @xiaolaa2/ableton-copilot-mcp -is
+     ```
 
    - 先启动 ableton-copilot-mcp（参考使用方法部分），然后让AI或手动调用 MCP tool `init_ableton_js` 工具帮您自动安装
    
@@ -87,6 +95,11 @@
    - [Cursor](https://www.cursor.com)
    - [Cherry Studio](https://github.com/CherryHQ/cherry-studio)
    - Claude Desktop
+
+示例：
+```bash
+npx @xiaolaa2/ableton-copilot-mcp --install-scripts
+```
 
 ### 环境变量
 

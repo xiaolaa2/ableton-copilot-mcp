@@ -59,7 +59,15 @@ As a music producer myself, I understand the challenges and needs during the mus
 1. Install **Node.js**: Make sure the npx command is available. It's recommended to install the latest stable version from the [Node.js official website](https://nodejs.org/)
 
 2. Install **MIDI Remote Scripts**:
-   You can install MIDI Remote Scripts in two ways:
+   You can install MIDI Remote Scripts in three ways:
+
+   - **Command Line Installation (Recommended)**:
+     Run the following command to automatically install the MIDI Remote Scripts:
+     ```bash
+     npx @xiaolaa2/ableton-copilot-mcp --install-scripts
+     # or use the short form
+     npx @xiaolaa2/ableton-copilot-mcp -is
+     ```
 
    - Start ableton-copilot-mcp (refer to Usage section) first, then let AI or manually call the MCP tool `init_ableton_js` to help you install automatically
    
