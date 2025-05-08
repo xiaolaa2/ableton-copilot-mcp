@@ -54,18 +54,23 @@ As a music producer myself, I understand the challenges and needs during the mus
 
 ## ⚠️ Warning
 - Direct manipulation of MIDI clips by AI may result in the loss of original notes and cannot be undone with Ctrl + Z. Please operate with caution. If needed, you can ask the AI to help you roll back note operations.
-
 ## 📥 Installation
 
 1. Install **Node.js**: Make sure the npx command is available. It's recommended to install the latest stable version from the [Node.js official website](https://nodejs.org/)
-2. Install **MIDI Remote Scripts**:
-You can install MIDI Remote Scripts in two ways:
 
-- Start ableton-copilot-mcp first and let the AI or manually call the MCP tool `init_ableton_js` to help you install automatically
-- Manual installation:
-  1. Download MIDI Remote Scripts from the [ableton-js](https://github.com/leolabs/ableton-js) project
-  2. Copy the `midi-script` folder to [Ableton Live's MIDI Remote Scripts directory](https://help.ableton.com/hc/en-us/articles/209072009-Installing-third-party-remote-scripts)
-  3. Rename it to `AbletonJS`
+2. Install **MIDI Remote Scripts**:
+   You can install MIDI Remote Scripts in two ways:
+
+   - Start ableton-copilot-mcp (refer to Usage section) first, then let AI or manually call the MCP tool `init_ableton_js` to help you install automatically
+   
+   - Manual installation:
+     1. Manually create a folder called "Remote Scripts" within your User Library
+        The default User Library location:
+        - **Windows**: `C:\Users\[username]\Documents\Ableton\User Library`
+        - **Mac**: `/Users/[username]/Music/Ableton/User Library`
+     2. Download MIDI Remote Scripts from the [ableton-js](https://github.com/leolabs/ableton-js) project
+     3. Copy the `midi-script` folder to [Ableton Live's MIDI Remote Scripts directory](https://help.ableton.com/hc/en-us/articles/209072009-Installing-third-party-remote-scripts)
+     4. Rename it to `AbletonJS`
 
 ## 🔧 Usage
 

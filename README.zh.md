@@ -54,16 +54,23 @@
 ## ⚠️ 注意
 - 当AI直接对midi片段操作时可能会导致原有的音符丢失，无法使用ctrl + z 撤销，请谨慎操作，如有需要可以尝试让AI帮您回滚音符操作
 
-## 📥 安装准备
-1. 安装 **Node.js**：确保 npx 命令可以正常运行，建议前往 [Node.js 官网](https://nodejs.org/) 安装最新的稳定版本
-2. 安装 **MIDI Remote Scripts**：
-您可以通过以下两种方式安装 MIDI Remote Scripts:
+## 📥 安装
 
-- 先启动 ableton-copilot-mcp 然后让AI或手动调用 MCP tool  `init_ableton_js` 工具帮您自动安装:
-- 手动安装:
-  1. 从 [ableton-js](https://github.com/leolabs/ableton-js) 项目下载 MIDI Remote Scripts
-  2. 将 `midi-script` 文件夹复制到 [Ableton Live 的 MIDI Remote Scripts 目录](https://help.ableton.com/hc/en-us/articles/209072009-Installing-third-party-remote-scripts)
-  3. 重命名为 `AbletonJS`
+1. 安装 **Node.js**：确保 npx 命令可以正常运行，建议前往 [Node.js 官网](https://nodejs.org/) 安装最新的稳定版本
+
+2. 安装 **MIDI Remote Scripts**：
+   您可以通过以下两种方式安装 MIDI Remote Scripts:
+
+   - 先启动 ableton-copilot-mcp（参考使用方法部分），然后让AI或手动调用 MCP tool `init_ableton_js` 工具帮您自动安装
+   
+   - 手动安装:
+     1. 在用户库中手动创建名为"Remote Scripts"的文件夹
+        默认用户库位置:
+        - **Windows**: `C:\Users\[username]\Documents\Ableton\User Library`
+        - **Mac**: `/Users/[username]/Music/Ableton/User Library`
+     2. 从 [ableton-js](https://github.com/leolabs/ableton-js) 项目下载 MIDI Remote Scripts
+     3. 将 `midi-script` 文件夹复制到 [Ableton Live 的 MIDI Remote Scripts 目录](https://help.ableton.com/hc/en-us/articles/209072009-Installing-third-party-remote-scripts)
+     4. 重命名为 `AbletonJS`
 
 ## 🔧 使用方法
 
