@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file.
 - Resolved redundant database backup creation issue
 
 
-## [0.3.1] - 2023-10-25
+## [0.3.1] - 2025-04-02
 
 ### Added
 - Added device parameter modification functionality
@@ -54,7 +54,7 @@ All notable changes to this project will be documented in this file.
 - Fixed missing log directory issue at application startup
 - Fixed MIDI recording error handling
 
-## [0.3.0] - 2023-10-22
+## [0.3.0] - 2025-04-01
 
 ### Added
 - Added operation history feature with rollback support
@@ -63,7 +63,7 @@ All notable changes to this project will be documented in this file.
 ### Improved
 - Improved error handling
 
-## [0.2.0] - 2023-10-20
+## [0.2.0] - 2025-04-01
 
 ### Added
 - Added audio clip creation functionality
@@ -72,7 +72,7 @@ All notable changes to this project will be documented in this file.
 ### Fixed
 - Fixed track creation index issues
 
-## [0.1.0] - 2023-10-18
+## [0.1.0] - 2025-03-30
 
 ### Initial Release
 - Basic Ableton Live control functionality
