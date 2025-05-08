@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.5.0] -2025-06-07
+## [0.6.0] - 2025-05-08
+- Added MCP tool init_ableton_js to support automatic initialization of ableton-js and automatic installation of MIDI Remote Scripts
+
+## [0.5.0] - 2025-05-07
 ### Added
 - Implemented database functionality with TypeORM
   - Added database initialization and migration handling
