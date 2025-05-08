@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.2] - 2025-05-08
+- Added command line support for installing ableton-js scripts
+
 ## [0.6.1] - 2025-05-08
 - Added MCP tool init_ableton_js to support automatic initialization of ableton-js and automatic installation of MIDI Remote Scripts
 
