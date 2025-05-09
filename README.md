@@ -51,6 +51,7 @@ As a music producer, I have some understanding of using Ableton for music creati
 ## 📝 To-Do List
 - Allow returning the created clip_id when creating midi clips (pending ableton-js update)
 - Support automatic envelope adjustment
+- Support more snapshot types (track properties, device parameters, etc.)
 
 ## ⚠️ Warning
 - Direct manipulation of MIDI clips by AI may result in the loss of original notes and cannot be undone with Ctrl + Z. Please operate with caution. If needed, you can ask the AI to help you roll back note operations.

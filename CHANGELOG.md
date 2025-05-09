@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.3] - 2025-05-10
+### Fixed
+- Enhanced rollback operation safety: Validating operation history status as successful before performing rollback to prevent rollback of incomplete or failed operations
+
 ## [0.6.2] - 2025-05-08
 - Added command line support for installing ableton-js scripts
 

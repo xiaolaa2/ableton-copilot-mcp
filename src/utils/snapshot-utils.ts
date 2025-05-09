@@ -1,10 +1,11 @@
 import { logger } from '../main.js'
 import { getOperationHistoryRepository, getSnapshotRepository } from '../db.js'
-import { OperationHistory } from '../entities/OperationHistory.js'
+import { OperationHistory, OperationStatus } from '../entities/OperationHistory.js'
 import { NoteSnapshotData, Snapshot, SnapshotType } from '../entities/Snapshot.js'
 import { getClipById } from './obj-utils.js'
 import { FindOneOptions } from 'typeorm'
 import { removeAllNotes } from './clip-utils.js'
+import { ErrorTypes } from '../mcp/error-handler.js'
 
 export async function createOperationHistory(
     operation: Omit<OperationHistory, 'id' | 'createdAt'>
@@ -50,6 +51,16 @@ export async function getOperationHistoriesPage(page: number, pageSize: number):
     }
 }
 
+export async function getOperationHistoryById(id: number): Promise<OperationHistory | null> {
+    const repo = getOperationHistoryRepository()
+    try {
+        return await repo.findOneBy({ id })
+    } catch (err) {
+        logger.error('Failed to get operation history by id', err)
+        throw err
+    }
+}
+
 export async function createSnapshot(
     snapshotData: Omit<Snapshot, 'id' | 'createdAt' | 'updatedAt'>
 ): Promise<number> {
@@ -78,14 +89,20 @@ export async function getSnapShotByHistoryId(historyId: number): Promise<Snapsho
 }
 
 export async function rollbackByHistoryId(historyId: number): Promise<void> {
+    const history = await getOperationHistoryById(historyId)
+    if (!history) {
+        throw ErrorTypes.NOT_FOUND(`Operation history not found for historyId: ${historyId}`)
+    }
+    if (history.status !== OperationStatus.SUCCESS) {
+        throw ErrorTypes.INTERNAL_ERROR(`Operation history with id ${historyId} is not successful, cannot be rolled back.`)
+    }
+
     const snapshot = await getSnapShotByHistoryId(historyId)
     if (!snapshot) {
-        logger.warn(`Snapshot not found for historyId: ${historyId}`)
-        return
+        throw ErrorTypes.NOT_FOUND(`Snapshot not found for historyId: ${historyId}`)
     }
     if (!snapshot.snapshot_data) {
-        logger.warn(`Snapshot data is empty for historyId: ${historyId}`)
-        return
+        throw ErrorTypes.INTERNAL_ERROR(`Snapshot data is empty for historyId: ${historyId}`)
     }
 
     switch (snapshot.snapshot_type) {
@@ -96,19 +113,15 @@ export async function rollbackByHistoryId(historyId: number): Promise<void> {
                 break
             }
         default:
-            throw new Error('Unsupported snapshot type')
+            throw ErrorTypes.INTERNAL_ERROR('Unsupported snapshot type')
     }
 }
 
 async function rollbackNoteSnapshot(snapshot_data: NoteSnapshotData): Promise<void> {
-    if (!snapshot_data) {
-        logger.warn('Rollback attempted with empty NoteSnapshotData')
-        return
-    }
     const { clip_id, notes } = snapshot_data
     const clip = getClipById(clip_id)
     if (!clip) {
-        throw new Error(`Clip with id ${clip_id} not found during rollback.`)
+        throw ErrorTypes.NOT_FOUND(`Clip with id ${clip_id} not found during rollback.`)
     }
     await removeAllNotes(clip)
     await clip.setNotes(notes)
