@@ -1,3 +1,5 @@
+[![MseeP Badge](https://mseep.net/pr/xiaolaa2-ableton-copilot-mcp-badge.jpg)](https://mseep.ai/app/xiaolaa2-ableton-copilot-mcp)
+
 # ableton-copilot-mcp
 
 <div align="center">
