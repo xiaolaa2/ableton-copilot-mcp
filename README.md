@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="License">
 </div>
 
-> An MCP (Model Context Protocol) server built on [ableton-js](https://github.com/leolabs/ableton-js) for real-time interaction and control with Ableton Live, dedicated to assisting music producers in their music production.
+> An MCP (Model Context Protocol) server built on [ableton-js](https://github.com/leolabs/ableton-js) for real-time interaction and control with Ableton Live's Arrangement View, dedicated to assisting music producers in their music production.
 
 ## 🎯 Note
 

@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/License-MIT-yellow" alt="许可证">
 </div>
 
-> 一个基于 [ableton-js](https://github.com/leolabs/ableton-js) 搭建的 MCP（Model Context Protocol）服务器，用于与 Ableton Live 进行实时交互和控制，致力于辅助音乐制作人进行音乐制作。
+> 一个基于 [ableton-js](https://github.com/leolabs/ableton-js) 搭建的 MCP（Model Context Protocol）服务器，用于与 Ableton Live 的编排视图（Arrangement View）进行实时交互和控制，致力于辅助音乐制作人进行音乐制作。
 
 ## 🎯 注意
 
