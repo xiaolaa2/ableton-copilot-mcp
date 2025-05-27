@@ -157,12 +157,6 @@ You can specify a custom data storage location using the `BASE_PATH` environment
 
 > 💡 **Tip**: The storage path is used to save log files, operation history, and state snapshots
 
-### Usage Tips
-
-- When connecting for the first time, it may take a few seconds to establish communication with Ableton Live
-- Make sure Ableton Live is running and the AbletonJS Control Surface is properly loaded
-- To check the connection status, you can use the `get_song_status` command in the MCP tools
-
 ## ✅ Compatibility Testing
 
 Compatibility primarily depends on the version support of the [ableton-js](https://github.com/leolabs/ableton-js) library.
