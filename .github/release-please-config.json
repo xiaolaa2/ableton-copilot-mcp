@@ -1,0 +1,38 @@
+{
+  "packages": {
+    ".": {
+      "release-type": "node",
+      "package-name": "@xiaolaa2/ableton-copilot-mcp",
+      "changelog-sections": [
+        {
+          "type": "feat",
+          "section": "🚀 Features"
+        },
+        {
+          "type": "fix",
+          "section": "🐛 Bug Fixes"
+        },
+        {
+          "type": "refactor",
+          "section": "♻️ Refactoring"
+        },
+        {
+          "type": "docs",
+          "section": "📚 Documentation"
+        },
+        {
+          "type": "deps",
+          "section": "📦 Dependencies"
+        },
+        {
+          "type": "chore",
+          "section": "🔧 Miscellaneous",
+          "hidden": false
+        }
+      ],
+      "extra-files": [
+        "README.md"
+      ]
+    }
+  }
+}
