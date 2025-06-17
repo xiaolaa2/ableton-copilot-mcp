@@ -2,10 +2,11 @@ import { logger } from '../main.js'
 import { getOperationHistoryRepository, getSnapshotRepository } from '../db.js'
 import { OperationHistory, OperationStatus } from '../entities/OperationHistory.js'
 import { NoteSnapshotData, Snapshot, SnapshotType } from '../entities/Snapshot.js'
-import { getClipById } from './obj-utils.js'
+import { getClipById, isNoteExtendedArray, NoteExtendedToNote } from './obj-utils.js'
 import { FindOneOptions } from 'typeorm'
 import { removeAllNotes } from './clip-utils.js'
 import { ErrorTypes } from '../mcp/error-handler.js'
+import { Note } from 'ableton-js/util/note.js'
 
 export async function createOperationHistory(
     operation: Omit<OperationHistory, 'id' | 'createdAt'>
@@ -123,6 +124,21 @@ async function rollbackNoteSnapshot(snapshot_data: NoteSnapshotData): Promise<vo
     if (!clip) {
         throw ErrorTypes.NOT_FOUND(`Clip with id ${clip_id} not found during rollback.`)
     }
+    if (!notes) {
+        throw ErrorTypes.INTERNAL_ERROR(`Notes data is empty for clipId: ${clip_id}`)
+    }
     await removeAllNotes(clip)
-    await clip.setNotes(notes)
+
+    // Since there is no set_notes_extend method, we need to use set_notes and apply_note_modifications instead
+    if (isNoteExtendedArray(notes)) {
+        const noteToSet = notes.map(note => NoteExtendedToNote(note))
+        // set notes
+        await clip.setNotes(noteToSet)
+        // modify notes
+        notes.forEach((note, index) => {
+            note.note_id = index + 1
+        })
+        await clip.applyNoteModifications(notes)
+    }
+    await clip.setNotes(notes as Note[])
 }

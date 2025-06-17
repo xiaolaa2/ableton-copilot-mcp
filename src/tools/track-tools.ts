@@ -4,8 +4,6 @@ import { commomProp, TrackGettableProps, TrackSettableProp } from '../types/zod-
 import { batchModifyTrackProp, getTrackProps } from '../utils/obj-utils.js'
 import { Result } from '../utils/common.js'
 import { getTrackById } from '../utils/obj-utils.js'
-import { Clip } from 'ableton-js/ns/clip.js'
-import { deleteClip, deleteDevice, createAudioClip } from '../utils/track-utils.js'
 
 class TrackTools {
 
@@ -22,8 +20,8 @@ class TrackTools {
     }
 
     @tool({
-        name: 'create_empty_midi_clip',
-        description: 'create empty midi clip on track',
+        name: 'create_midi_clip',
+        description: 'Creates an empty MIDI clip on the track and returns the created clip information',
         paramsSchema: {
             track_id: z.string(),
             length: z.number().describe('Length is given in beats and must be a greater value than 0.0.'),
@@ -55,8 +53,8 @@ class TrackTools {
         // Get newly created clip and duplicate to arrangement view
         const newlyCreatedClip = await lastClipSlot.get('clip')
         if (newlyCreatedClip) {
-            await track.duplicateClipToArrangement(newlyCreatedClip, time) as Clip
-            return Result.ok()
+            const clip = await track.duplicateClipToArrangement(newlyCreatedClip, time)
+            return Result.data(clip.raw)
         }
 
         throw new Error('Failed to create MIDI clip')
@@ -79,7 +77,7 @@ class TrackTools {
 
     @tool({
         name: 'duplicate_clip_to_track',
-        description: 'duplicate clip to track',
+        description: 'duplicate clip to track and return the duplicated clip information',
         paramsSchema: {
             clip_id: z.string(),
             track_id: z.string(),
@@ -88,22 +86,21 @@ class TrackTools {
     })
     async duplicateClipToTrack({ clip_id, track_id, time }: { clip_id: string, track_id: string, time: number }) {
         const track = getTrackById(track_id)
-        await track.duplicateClipToArrangement(clip_id, time)
-        return Result.ok()
+        const clip = await track.duplicateClipToArrangement(clip_id, time)
+        return Result.data(clip.raw)
     }
 
-    // @tool({
-    //     name: 'delete_clip',
-    //     description: 'delete clip by id',
-    //     paramsSchema: {
-    //         track_id: z.string(),
-    //         clip_id: z.string(),
-    //     }
-    // })
-    // TODO: need ableton-js support for delete_clip
+    @tool({
+        name: 'delete_clip',
+        description: 'delete clip by id',
+        paramsSchema: {
+            track_id: z.string(),
+            clip_id: z.string(),
+        }
+    })
     async deleteClipById({ track_id, clip_id }: { track_id: string, clip_id: string }) {
         const track = getTrackById(track_id)
-        await deleteClip(track, clip_id)
+        await track.deleteClip(clip_id)
         return Result.ok()
     }
 
@@ -117,7 +114,7 @@ class TrackTools {
     })
     async deleteDeviceByIndex({ track_id, index }: { track_id: string, index: number }) {
         const track = getTrackById(track_id)
-        await deleteDevice(track, index)
+        await track.deleteDevice(index)
         return Result.ok()
     }
 
@@ -138,7 +135,7 @@ class TrackTools {
     })
     async createAudioClip({ track_id, file_path, position }: { track_id: string, file_path: string, position: number }) {
         const track = getTrackById(track_id)
-        await createAudioClip(track, file_path, position)
+        await track.createAudioClip(file_path, position)
         return Result.ok()
     }
 }

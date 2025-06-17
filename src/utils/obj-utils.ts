@@ -18,6 +18,8 @@ import { Scene } from 'ableton-js/ns/scene.js'
 import { ClipSlot } from 'ableton-js/ns/clip-slot.js'
 import { RawBrowserItem, BrowserItem } from 'ableton-js/ns/browser-item.js'
 import { ErrorTypes } from '../mcp/error-handler.js'
+import { getAllNotes } from './clip-utils.js'
+import { Note, NoteExtended } from 'ableton-js/util/note.js'
 
 export function modifyObjProps<T extends Namespace<any, any, SP, any>, SP>(
     obj: T,
@@ -158,9 +160,18 @@ export async function batchModifyClipProp(clips: { clip_id: string, property: z.
 
 export async function getClipProps(
     clip: Clip,
-    scheme: Record<string, boolean> | z.ZodObject<z.ZodRawShape, 'strip', z.ZodTypeAny, any, any>
+    scheme: z.infer<typeof ClipGettableProp>
 ) {
-    return await getObjProps(clip, scheme)
+    let notes: any[] = []
+    if (scheme.notes) {
+        delete scheme.notes
+        notes = await getAllNotes(clip)
+    }
+    const res = await getObjProps(clip, scheme)
+    return {
+        ...res,
+        notes
+    }
 }
 
 /**
@@ -322,9 +333,9 @@ export async function getClipSlotProps(clipSlot: ClipSlot) {
     return props
 }
 /**
- * 获取原始Track对象
- * @param trackId 轨道ID
- * @returns 原始Track对象
+ * Get raw Track object
+ * @param trackId Track ID
+ * @returns Raw Track object
  */
 
 export function getRawTrackById(trackId: string): RawTrack {
@@ -344,9 +355,9 @@ export function getRawTrackById(trackId: string): RawTrack {
     }
 }
 /**
- * 获取Track对象
- * @param trackId 轨道ID
- * @returns Track对象
+ * Get Track object
+ * @param trackId Track ID
+ * @returns Track object
  */
 
 export function getTrackById(trackId: string): Track {
@@ -354,9 +365,9 @@ export function getTrackById(trackId: string): Track {
     return new Track(ableton, rawTrack)
 }
 /**
- * 获取原始Clip对象
- * @param clipId 片段ID
- * @returns 原始Clip对象
+ * Get raw Clip object
+ * @param clipId Clip ID
+ * @returns Raw Clip object
  */
 
 export function getRawClipById(clipId: string): RawClip {
@@ -377,9 +388,9 @@ export function getRawClipById(clipId: string): RawClip {
     }
 }
 /**
- * 获取Clip对象
- * @param clipId 片段ID
- * @returns Clip对象
+ * Get Clip object
+ * @param clipId Clip ID
+ * @returns Clip object
  */
 
 export function getClipById(clipId: string): Clip {
@@ -387,9 +398,9 @@ export function getClipById(clipId: string): Clip {
     return new Clip(ableton, rawClip)
 }
 /**
- * 获取原始浏览器项目对象
- * @param id 项目ID
- * @returns 原始浏览器项目对象
+ * Get raw browser item object
+ * @param id Item ID
+ * @returns Raw browser item object
  */
 
 export function getRawBrowserItemById(id: string): RawBrowserItem {
@@ -410,9 +421,9 @@ export function getRawBrowserItemById(id: string): RawBrowserItem {
     }
 }
 /**
- * 获取浏览器项目对象
- * @param id 项目ID
- * @returns 浏览器项目对象
+ * Get browser item object
+ * @param id Item ID
+ * @returns Browser item object
  */
 
 export function getBrowserItemById(id: string) {
@@ -420,9 +431,9 @@ export function getBrowserItemById(id: string) {
     return new BrowserItem(ableton, rawBrowserItem)
 }
 /**
- * 获取原始设备对象
- * @param id 设备ID
- * @returns 原始设备对象
+ * Get raw device object
+ * @param id Device ID
+ * @returns Raw device object
  */
 
 export function getRawDeviceById(id: string): RawDevice {
@@ -438,9 +449,9 @@ export function getRawDeviceById(id: string): RawDevice {
     }
 }
 /**
- * 获取原始设备参数对象
- * @param id 参数ID
- * @returns 原始设备参数对象
+ * Get raw device parameter object
+ * @param id Parameter ID
+ * @returns Raw device parameter object
  */
 
 export function getRawDeviceParameterById(id: string): RawDeviceParameter {
@@ -456,22 +467,50 @@ export function getRawDeviceParameterById(id: string): RawDeviceParameter {
     }
 }
 /**
- * 获取设备参数对象
- * @param id 参数ID
- * @returns 设备参数对象
+ * Get device parameter object
+ * @param id Parameter ID
+ * @returns Device parameter object
  */
 
 export function getDeviceParameterById(id: string) {
     const rawDeviceParameter = getRawDeviceParameterById(id)
     return new DeviceParameter(ableton, rawDeviceParameter)
 }
-/**
- * 获取设备对象
- * @param id 设备ID
- * @returns 设备对象
- */
 
+/**
+ * Get device object
+ * @param id Device ID
+ * @returns Device object
+ */
 export function getDeviceById(id: string) {
     const rawDevice = getRawDeviceById(id)
     return new Device(ableton, rawDevice)
+}
+
+/**
+ * Check if a note is an extended note
+ * @param note Note object
+ * @returns Returns true if it's an extended note, false otherwise
+ */
+export function isNoteExtended(note: Note | NoteExtended): boolean {
+    return (note as NoteExtended).note_id !== undefined
+}
+
+/**
+ * Convert a NoteExtended object to a Note object
+ * @param note NoteExtended object
+ * @returns Note object
+ */
+export function NoteExtendedToNote(note: NoteExtended): Note {
+    return {
+        pitch: note.pitch,
+        time: note.start_time,
+        duration: note.duration,
+        velocity: note.velocity,
+        muted: note.mute,
+    }
+}
+
+export function isNoteExtendedArray(notes: (Note | NoteExtended)[]): notes is NoteExtended[] {
+    return notes.length > 0 && isNoteExtended(notes[0])
 }

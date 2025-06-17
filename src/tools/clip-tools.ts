@@ -1,7 +1,7 @@
 import { tool } from '../mcp/decorators/tool.js'
 import { z } from 'zod'
-import { Note } from 'ableton-js/util/note.js'
-import { NOTE, ClipSettableProp, ClipGettableProp } from '../types/zod-types.js'
+import { Note, NoteExtended } from 'ableton-js/util/note.js'
+import { NOTE, ClipSettableProp, ClipGettableProp, NOTE_EXTENED } from '../types/zod-types.js'
 import { batchModifyClipProp, getClipProps } from '../utils/obj-utils.js'
 import { Result } from '../utils/common.js'
 import { getClipById } from '../utils/obj-utils.js'
@@ -49,6 +49,21 @@ class ClipTools {
     }
 
     @tool({
+        name: 'remove_notes_by_ids',
+        description: 'Remove notes by clip id and note ids',
+        enableSnapshot: true,
+        paramsSchema: {
+            clip_id: z.string(),
+            note_ids: z.array(z.number()).describe('note ids, get from get_clip_notes')
+        }
+    })
+    async removeClipNotesById({ clip_id, note_ids }: { clip_id: string, note_ids: number[] }) {
+        const clip = getClipById(clip_id)
+        await clip.removeNotesById(note_ids)
+        return Result.ok()
+    }
+
+    @tool({
         name: 'add_notes_to_clip',
         description: 'Add notes to clip by clip id',
         enableSnapshot: true,
@@ -61,6 +76,21 @@ class ClipTools {
         const clip = getClipById(clip_id)
         await createNoteSnapshot(clip, historyId)
         await clip.setNotes(notes)
+        return Result.ok()
+    }
+
+    @tool({
+        name: 'modify_clip_notes',
+        description: 'Modify clip notes by clip id',
+        enableSnapshot: true,
+        paramsSchema: {
+            notes: z.array(NOTE_EXTENED).describe('[array] the notes to modify.'),
+            clip_id: z.string()
+        }
+    })
+    async modifyClipNotes({ notes, clip_id }: { notes: NoteExtended[], clip_id: string }) {
+        const clip = getClipById(clip_id)
+        await clip.applyNoteModifications(notes)
         return Result.ok()
     }
 

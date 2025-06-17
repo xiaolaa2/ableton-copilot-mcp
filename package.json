@@ -14,11 +14,7 @@
     "publish-npm": "npm publish",
     "release:major": "npm version major && git push --follow-tags",
     "release:minor": "npm version minor && git push --follow-tags",
-    "release:patch": "npm version patch && git push --follow-tags",
-    "typeorm": "typeorm-ts-node-esm",
-    "migration:generate": "npm run typeorm -- migration:generate -d src/migration-datasource.ts",
-    "migration:run": "npm run typeorm -- migration:run -d src/migration-datasource.ts",
-    "migration:revert": "npm run typeorm -- migration:revert -d src/migration-datasource.ts"
+    "release:patch": "npm version patch && git push --follow-tags"
   },
   "keywords": [
     "ableton",
@@ -50,7 +46,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.2",
     "@types/sql.js": "^1.4.9",
-    "ableton-js": "^3.6.1",
+    "ableton-js": "^3.7.0",
     "async-mutex": "^0.5.0",
     "reflect-metadata": "^0.2.2",
     "sql.js": "^1.13.0",

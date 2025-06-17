@@ -3,7 +3,7 @@ import {
     Column, ManyToOne, JoinColumn
 } from 'typeorm'
 import { OperationHistory } from './OperationHistory.js'
-import { Note } from 'ableton-js/util/note.js'
+import { Note, NoteExtended } from 'ableton-js/util/note.js'
 
 export enum SnapshotType {
     NOTE = 'NOTE',
@@ -11,7 +11,7 @@ export enum SnapshotType {
 
 export interface NoteSnapshotData {
     clip_id: string
-    notes: Note[]
+    notes: Note[] | NoteExtended[]
 }
 
 @Entity('snapshots')
