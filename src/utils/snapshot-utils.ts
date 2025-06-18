@@ -94,6 +94,8 @@ export async function rollbackByHistoryId(historyId: number): Promise<void> {
     if (!history) {
         throw ErrorTypes.NOT_FOUND(`Operation history not found for historyId: ${historyId}`)
     }
+
+    history.status = typeof history.status !== 'number' ? Number(history.status) : history.status
     if (history.status !== OperationStatus.SUCCESS) {
         throw ErrorTypes.INTERNAL_ERROR(`Operation history with id ${historyId} is not successful, cannot be rolled back.`)
     }
@@ -139,6 +141,7 @@ async function rollbackNoteSnapshot(snapshot_data: NoteSnapshotData): Promise<vo
             note.note_id = index + 1
         })
         await clip.applyNoteModifications(notes)
+    } else {
+        await clip.setNotes(notes as Note[])
     }
-    await clip.setNotes(notes as Note[])
 }

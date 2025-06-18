@@ -54,11 +54,13 @@ class ClipTools {
         enableSnapshot: true,
         paramsSchema: {
             clip_id: z.string(),
-            note_ids: z.array(z.number()).describe('note ids, get from get_clip_notes')
+            note_ids: z.array(z.number()).describe('note ids, get from get_clip_notes'),
+            historyId: z.number()
         }
     })
-    async removeClipNotesById({ clip_id, note_ids }: { clip_id: string, note_ids: number[] }) {
+    async removeClipNotesById({ clip_id, note_ids, historyId }: { clip_id: string, note_ids: number[], historyId: number }) {
         const clip = getClipById(clip_id)
+        await createNoteSnapshot(clip, historyId)
         await clip.removeNotesById(note_ids)
         return Result.ok()
     }
@@ -88,8 +90,9 @@ class ClipTools {
             clip_id: z.string()
         }
     })
-    async modifyClipNotes({ notes, clip_id }: { notes: NoteExtended[], clip_id: string }) {
+    async modifyClipNotes({ notes, clip_id, historyId }: { notes: NoteExtended[], clip_id: string, historyId: number }) {
         const clip = getClipById(clip_id)
+        await createNoteSnapshot(clip, historyId)
         await clip.applyNoteModifications(notes)
         return Result.ok()
     }
