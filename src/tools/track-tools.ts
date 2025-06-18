@@ -106,7 +106,7 @@ class TrackTools {
 
     @tool({
         name: 'delete_device',
-        description: 'delete device by index',
+        description: 'delete device by index, start from 0',
         paramsSchema: {
             track_id: z.string(),
             index: z.number(),
