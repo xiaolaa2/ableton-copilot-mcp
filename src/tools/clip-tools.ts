@@ -55,7 +55,6 @@ class ClipTools {
         paramsSchema: {
             clip_id: z.string(),
             note_ids: z.array(z.number()).describe('note ids, get from get_clip_notes'),
-            historyId: z.number()
         }
     })
     async removeClipNotesById({ clip_id, note_ids, historyId }: { clip_id: string, note_ids: number[], historyId: number }) {
