@@ -44,12 +44,10 @@ As a music producer, I have some understanding of using Ableton for music creati
 
 ### 📝 State Management
 - Operation history tracking and detailed logging
-- Snapshot creation for critical operations
-- Support for operation rollback (especially for note operations)
+- Support for operation rollback (currently only supports note operations)
 - Browse and restore previous states
 
 ## 📝 To-Do List
-- Allow returning the created clip_id when creating midi clips (pending ableton-js update)
 - Support automatic envelope adjustment
 - Support more snapshot types (track properties, device parameters, etc.)
 
@@ -81,7 +79,7 @@ Choose **ONE** of the following three methods to install MIDI Remote Scripts:
 - **Method 3: Manual installation**  
   1. Create a folder named "Remote Scripts" in your Ableton User Library:
      - Windows: `C:\Users\[username]\Documents\Ableton\User Library\Remote Scripts`
-     - Mac: `/Users/[username]/Music/Ableton/User Library\Remote Scripts`
+     - Mac: `/Users/[username]/Music/Ableton/User Library/Remote Scripts`
   2. Download MIDI Remote Scripts from the [ableton-js](https://github.com/leolabs/ableton-js) project
   3. Copy the downloaded `midi-script` folder to the location above
   4. Rename it to `AbletonJS`
