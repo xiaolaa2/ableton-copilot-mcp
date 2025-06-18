@@ -78,7 +78,7 @@ class SongTools {
         }
     })
     async deleteTrack({ index, type }: { index: number, type: TrackType }) {
-    
+
         switch (type) {
             case TrackType.midi:
             case TrackType.audio:

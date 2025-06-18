@@ -8,7 +8,7 @@ import { GettableProperties as MixerDeviceGettablePropType } from 'ableton-js/ns
 import { GettableProperties as ClipGettablePropType } from 'ableton-js/ns/clip.js'
 import { GettableProperties as SceneGettablePropType } from 'ableton-js/ns/scene.js'
 import { GettableProperties as ClipSlotGettablePropType } from 'ableton-js/ns/clip-slot.js'
-import { Note } from 'ableton-js/util/note.js'
+import { Note, NoteExtended } from 'ableton-js/util/note.js'
 import { z } from 'zod'
 import { createZodSchema } from '../utils/common.js'
 
@@ -28,6 +28,24 @@ export const NOTE = createZodSchema<Note>({
     velocity: z.number().min(0).max(127)
         .describe('[float] the note velocity, 0 ... 127 (100 by default).'),
     muted: z.boolean().describe('[bool] true = the note is deactivated (false by default).')
+})
+
+export const NOTE_EXTENED = createZodSchema<NoteExtended>({
+    note_id: z.number(),
+    pitch: z.number().min(0).max(127).describe('[int] the MIDI note number, 0...127, 60 is C3.').optional(),
+    start_time: z.number().describe('[float] the note start time in beats of absolute clip time.').optional(),
+    duration: z.number().describe('[float] the note length in beats.'),
+    velocity: z.number().min(0).max(127)
+        .describe('[float] the note velocity, 0 ... 127 (100 by default).').optional(),
+    mute: z.boolean().describe('[bool] true = the note is deactivated (false by default).').optional(),
+    probability: z.number().min(0).max(1).describe(` [float] the chance that the note will be played:
+        1.0 = the note is always played;
+        0.0 = the note is never played.`).optional(),
+    release_velocity: z.number().describe('[float] the note release velocity.').optional(),
+    velocity_deviation: z.number().describe(`[float] the range of velocity values at which the note can be played:
+        0.0 = no deviation; the note will always play at the velocity specified by the velocity property
+        -127.0 to 127.0 = the note will be assigned a velocity value between velocity and velocity + velocity_deviation, inclusive; 
+        if the resulting range exceeds the limits of MIDI velocity (0 to 127), then it will be clamped within those limits.`).optional()
 })
 
 export const RAW_CLIP = createZodSchema<RawClip>({

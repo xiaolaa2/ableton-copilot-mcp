@@ -14,12 +14,7 @@ export async function removeNotesExtended(
     if (abltonMajorVersion < 11) {
         return clip.removeNotes(fromTime, fromPitch, timeSpan, pitchSpan)
     }
-    return clip.sendCommand('remove_notes_extended', [
-        fromPitch,
-        pitchSpan,
-        fromTime,
-        timeSpan,
-    ])
+    return clip.removeNotesExtended(fromTime, fromPitch, timeSpan, pitchSpan)
 }
 
 export async function removeAllNotes(clip: Clip) {
@@ -27,6 +22,10 @@ export async function removeAllNotes(clip: Clip) {
 }
 
 export async function getAllNotes(clip: Clip) {
+    const liveVersion = await ableton.application.get('major_version')
+    if (liveVersion >= 11) {
+        return clip.getNotesExtended(0, 0, 9999, 127)
+    }
     return clip.getNotes(0, 0, 9999, 127)
 }
 

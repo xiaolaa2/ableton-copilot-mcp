@@ -31,3 +31,6 @@ Thumbs.db
 
 # Test
 test-plan.md
+
+# test
+tests/tools/*.test.ts
