@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.0](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.6.3...v0.7.0) (2025-06-18)
+
+
+### Features
+
+* Update Ableton-js version and support extended note features for Ableton Live 11 ([7312fd1](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/7312fd19d83dfd594a3bab8876e4eb254945e39d))
+
+
+### Bug Fixes
+
+* Fix history state type checking and optimize note rollback logic ([aa97940](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/aa979404e95e649036387fc401074238b02a5a2f))
+* Remove historyId parameter from removeClipNotesById interface ([ea0caea](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/ea0caea448dff1a3e5d9d3cdcad488822a3a7819))
+
 ## [0.6.3](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.6.2...v0.6.3) (2025-05-10)
 
 
