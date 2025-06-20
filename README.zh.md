@@ -13,6 +13,10 @@
 
 作为一名音乐制作人，我对使用Ableton来创作音乐有一些理解。其实在创作音乐的时候我们经常会需要解决一些比较繁琐的操作，比如音符属性人性化、合并音符、把一个轨道录制到另外一个音频轨道等，以前我们只能依赖于宿主DAW自己提供的一些功能来进行这些操作，但是现在大模型和MCP出现之后我们有了可以让AI帮我们进行自动化操作的可能性，尽管目前让AI直接生成音符、创作一首完整歌曲仍不太现实，它不能够生成出一个好听的歌曲，但让AI来帮我们进行辅助操作也是一种新的可能。
 
+## 🎥 功能演示
+
+<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1094887375?h=7de6bffee1&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="2025-06-20 09-09-28"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+
 ## 🚀 功能特性
 
 ### 🎵 歌曲控制（Song）

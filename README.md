@@ -13,6 +13,10 @@
 
 As a music producer, I have some understanding of using Ableton for music creation. During the creative process, we often need to handle various tedious operations, such as humanizing note properties, merging notes, recording one track to another audio track, etc. Previously, we could only rely on the functions provided by the host DAW for these operations. However, with the emergence of large language models and MCP, we now have the possibility to let AI help us with automation. Although it's still not realistic for AI to directly generate notes or create a complete song (it can't generate a good-sounding song), having AI assist us with auxiliary operations presents a new possibility.
 
+## 🎥 Demo
+
+<div style="padding:56.25% 0 0 0;position:relative;"><iframe src="https://player.vimeo.com/video/1094887375?h=7de6bffee1&badge=0&autopause=0&player_id=0&app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" style="position:absolute;top:0;left:0;width:100%;height:100%;" title="2025-06-20 09-09-28"></iframe></div><script src="https://player.vimeo.com/api/player.js"></script>
+
 ## 🚀 Features
 
 ### 🎵 Song Control
