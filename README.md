@@ -13,6 +13,11 @@
 
 As a music producer, I have some understanding of using Ableton for music creation. During the creative process, we often need to handle various tedious operations, such as humanizing note properties, merging notes, recording one track to another audio track, etc. Previously, we could only rely on the functions provided by the host DAW for these operations. However, with the emergence of large language models and MCP, we now have the possibility to let AI help us with automation. Although it's still not realistic for AI to directly generate notes or create a complete song (it can't generate a good-sounding song), having AI assist us with auxiliary operations presents a new possibility.
 
+## 🎥 Demo
+This is a simple demonstration video of MIDI operations.
+
+https://github.com/user-attachments/assets/8d635c4c-a1f2-44be-93ae-062038d14c71
+
 ## 🚀 Features
 
 ### 🎵 Song Control
