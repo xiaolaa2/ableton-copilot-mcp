@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.8.0](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.7.0...v0.8.0) (2025-06-21)
+
+
+### Features
+
+* Add application utility class and enhance clip tools functionality ([aa8392d](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/aa8392d5a5b6a072b60f1ca16ea11ce1368fbebe))
+* Add application utility class and enhance clip tools functionality ([8b7efd1](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/8b7efd1601aa61fad4125bd47f4ee89cbf3214b2))
+
 ## [0.7.0](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.6.3...v0.7.0) (2025-06-18)
 
 
