@@ -13,6 +13,7 @@ import TrackTools from './tools/track-tools.js'
 import PerformanceMonitor from './utils/performance-monitor.js'
 import fs from 'fs'
 import ExtraTools from './tools/extra-tools.js'
+import ApplicationTools from './tools/application-tools.js'
 
 // Set environment variables
 process.env.NODE_OPTIONS = process.env.NODE_OPTIONS || '--max-old-space-size=4096'
@@ -37,7 +38,7 @@ try {
     // Start MCP server
     await startMcp({
         // Register tool classes, make decorators available
-        tools: [BrowserTools, ClipTools, DeviceTools, HistoryTools, SongTools, TrackTools, ExtraTools]
+        tools: [BrowserTools, ClipTools, DeviceTools, HistoryTools, SongTools, TrackTools, ExtraTools, ApplicationTools]
     })
 
     // Initialize Ableton connection

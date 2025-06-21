@@ -9,9 +9,8 @@ class McpClient {
     constructor() {
         this.client = new Client({ name: 'ableton-copilot-mcp', version: '0.0.1' })
         this.transport = new StdioClientTransport({
-            // node executable path
-            command: 'npx',
-            args: ['-y', '@xiaolaa2/ableton-copilot-mcp'],
+            command: 'yarn',
+            args: ['run', 'dev'],
         })
     }
 
@@ -29,7 +28,11 @@ class McpClient {
 
     public async callTool(name: string, params: Record<string, any>) {
         const response = await this.client.callTool({ name, arguments: params })
-        return parseMcpResult(response)
+        const result = parseMcpResult(response)
+        if (response.isError) {
+            throw new Error(JSON.stringify(result))
+        }
+        return result
     }
 
     public getClient() {

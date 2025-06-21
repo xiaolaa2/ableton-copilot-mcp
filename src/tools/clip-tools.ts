@@ -2,10 +2,11 @@ import { tool } from '../mcp/decorators/tool.js'
 import { z } from 'zod'
 import { Note, NoteExtended } from 'ableton-js/util/note.js'
 import { NOTE, ClipSettableProp, ClipGettableProp, NOTE_EXTENED } from '../types/zod-types.js'
-import { batchModifyClipProp, getClipProps } from '../utils/obj-utils.js'
+import { batchModifyClipProp, getClipProps, NoteToNoteExtended } from '../utils/obj-utils.js'
 import { Result } from '../utils/common.js'
 import { getClipById } from '../utils/obj-utils.js'
-import { createNoteSnapshot, removeNotesExtended } from '../utils/clip-utils.js'
+import { createNoteSnapshot, getNotes, removeNotesExtended, replaceClipNotesExtended } from '../utils/clip-utils.js'
+import { ableton } from '../ableton.js'
 
 class ClipTools {
 
@@ -20,6 +21,23 @@ class ClipTools {
     async getClipInfoById({ clip_id, properties }: { clip_id: string, properties: z.infer<typeof ClipGettableProp> }) {
         const clip = getClipById(clip_id)
         return await getClipProps(clip, properties)
+    }
+
+    @tool({
+        name: 'get_clip_notes',
+        description: 'Get clip notes by clip id. Returns NoteExtended array for Live 11+ and Note array for Live 10 and below',
+        paramsSchema: {
+            clip_id: z.string(),
+            from_pitch: z.number().min(0).max(127),
+            from_time: z.number(),
+            time_span: z.number(),
+            pitch_span: z.number(),
+        }
+    })
+    async getClipNotes({ clip_id, from_pitch, from_time, time_span, pitch_span }: { clip_id: string, from_pitch: number, from_time: number, time_span: number, pitch_span: number }) {
+        const clip = getClipById(clip_id)
+        const notes = await getNotes(clip, from_pitch, pitch_span, from_time, time_span)
+        return Result.data(notes)
     }
 
     @tool({
@@ -97,19 +115,45 @@ class ClipTools {
     }
 
     @tool({
-        name: 'replace_all_notes_to_clip',
-        description: 'Replace clip all notes by clip id',
+        name: 'replace_clip_notes',
+        description: 'Replace all notes in the clip with new notes',
         enableSnapshot: true,
         paramsSchema: {
-            notes: z.array(NOTE).describe('[array] the notes to remove.'),
-            clip_id: z.string()
+            clip_id: z.string(),
+            notes: z.array(NOTE).optional().describe('[array] The new notes to replace existing notes with'),
+            notes_extended: z.array(NOTE_EXTENED).optional().describe('[array] Extended note data (Live 11+ only)')
         }
     })
-    async replaceAllDetailClipNotes({ notes, clip_id, historyId }: { notes: Note[], clip_id: string, historyId: number }) {
+    async replaceClipNotes({ notes, clip_id, historyId, notes_extended }: {
+        notes: Note[],
+        clip_id: string,
+        historyId: number,
+        notes_extended: NoteExtended[]
+    }) {
         const clip = getClipById(clip_id)
         await createNoteSnapshot(clip, historyId)
-        await clip.selectAllNotes()
-        await clip.replaceSelectedNotes(notes)
+
+        const liveVersion = await ableton.application.get('major_version', true)
+
+        if (liveVersion >= 11) {
+            let noteToSet: NoteExtended[] = []
+            // Live 11+ supports extended notes and setNotesExtended
+            if (notes_extended && notes_extended.length > 0) {
+                noteToSet = notes_extended
+            } else {
+                // Convert basic notes to extended format for Live 11+
+                noteToSet = notes.map(note => NoteToNoteExtended(note))
+            }
+            await replaceClipNotesExtended(clip, noteToSet)
+        } else {
+            if (notes_extended && notes_extended.length > 0) {
+                throw new Error('Live 10 and below does not support extended notes')
+            }
+            // Live 10 and below: use legacy API
+            await clip.selectAllNotes()
+            await clip.replaceSelectedNotes(notes)
+        }
+
         return Result.ok()
     }
 

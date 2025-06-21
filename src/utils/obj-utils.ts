@@ -20,6 +20,7 @@ import { RawBrowserItem, BrowserItem } from 'ableton-js/ns/browser-item.js'
 import { ErrorTypes } from '../mcp/error-handler.js'
 import { getAllNotes } from './clip-utils.js'
 import { Note, NoteExtended } from 'ableton-js/util/note.js'
+import { Application } from 'ableton-js/ns/application.js'
 
 export function modifyObjProps<T extends Namespace<any, any, SP, any>, SP>(
     obj: T,
@@ -511,6 +512,32 @@ export function NoteExtendedToNote(note: NoteExtended): Note {
     }
 }
 
+export function NoteToNoteExtended(note: Note): NoteExtended {
+    return {
+        pitch: note.pitch,
+        start_time: note.time,
+        duration: note.duration,
+        velocity: note.velocity,
+        mute: note.muted,
+        probability: 1.0,
+        release_velocity: 64,
+        velocity_deviation: 0,
+        note_id: 0,
+    }
+}
+
 export function isNoteExtendedArray(notes: (Note | NoteExtended)[]): notes is NoteExtended[] {
     return notes.length > 0 && isNoteExtended(notes[0])
+}
+
+/**
+ * get application properties
+ */
+export async function getAppProperties(
+    application: Application,
+    scheme: Record<string, boolean> | z.ZodObject<z.ZodRawShape, 'strip', z.ZodTypeAny, any, any>
+) {
+    const props = await getObjProps(application, scheme)
+    // Application properties are simple values, no need for special processing like tracks or scenes
+    return props
 }
