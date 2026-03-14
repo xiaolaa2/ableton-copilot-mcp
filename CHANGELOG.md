@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.9.0](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.8.0...v0.9.0) (2026-03-14)
+
+
+### Features
+
+* upgrade ableton-js to v4.0.4 and optimize note field abbreviations ([9f68107](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/9f68107493757b0b850b4de19448a9e6698c4b77))
+
 ## [0.8.0](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.7.0...v0.8.0) (2025-06-21)
 
 
