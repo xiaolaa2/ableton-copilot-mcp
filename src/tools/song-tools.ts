@@ -1,7 +1,7 @@
 import { z } from 'zod'
 import { tool } from '../mcp/decorators/tool.js'
 import { commomProp, SongGettableProps, SongSettableProp, SongViewGettableProps, SongViewSettableProp, TrackType, ZodTrackType } from '../types/zod-types.js'
-import { Track } from 'ableton-js/ns/track.js'
+import { Track } from 'ableton-js/ns/track'
 import { Result } from '../utils/common.js'
 import { getSongProperties, getSongViewProps, modifySongProp, modifySongViewProp } from '../utils/obj-utils.js'
 import { ableton } from '../ableton.js'
@@ -127,18 +127,6 @@ class SongTools {
         return recordByTimeRange(ableton.song, start_time, end_time)
     }
 
-    // @tool({
-    //     name: 'move_track',
-    //     description: 'move track by index',
-    //     paramsSchema: {
-    //         track_id: z.string(),
-    //         to_index: z.number().describe('[int] index of track'),
-    //     }
-    // })
-    // async moveTrack(track_id: string, to_index: number) {
-
-    //     return Result.ok()
-    // }
 }
 
 export default SongTools

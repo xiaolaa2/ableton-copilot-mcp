@@ -1,8 +1,8 @@
-import { Clip } from 'ableton-js/ns/clip.js'
+import { Clip } from 'ableton-js/ns/clip'
 import { ableton } from '../ableton.js'
 import { SnapshotType, Snapshot, NoteSnapshotData } from '../entities/Snapshot.js'
 import { createSnapshot } from './snapshot-utils.js'
-import { Note, NoteExtended } from 'ableton-js/util/note.js'
+import { Note, NoteExtended } from 'ableton-js/util/note'
 import { NoteExtendedToNote } from './obj-utils.js'
 import { ErrorTypes } from '../mcp/error-handler.js'
 

@@ -6,7 +6,7 @@ import { getClipById, isNoteExtendedArray } from './obj-utils.js'
 import { FindOneOptions } from 'typeorm'
 import { removeAllNotes, setNotesExtended } from './clip-utils.js'
 import { ErrorTypes } from '../mcp/error-handler.js'
-import { Note } from 'ableton-js/util/note.js'
+import { Note } from 'ableton-js/util/note'
 
 export async function createOperationHistory(
     operation: Omit<OperationHistory, 'id' | 'createdAt'>

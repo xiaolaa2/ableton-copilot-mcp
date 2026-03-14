@@ -1143,7 +1143,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^8.31.0"
     "@typescript-eslint/parser": "npm:^8.31.0"
     "@vitest/ui": "npm:^3.2.3"
-    ableton-js: "npm:^3.7.0"
+    ableton-js: "npm:4.0.4"
     async-mutex: "npm:^0.5.0"
     c8: "npm:^10.1.3"
     eslint: "npm:^9.25.1"
@@ -1171,15 +1171,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ableton-js@npm:^3.7.0":
-  version: 3.7.0
-  resolution: "ableton-js@npm:3.7.0"
+"ableton-js@npm:4.0.4":
+  version: 4.0.4
+  resolution: "ableton-js@npm:4.0.4"
   dependencies:
     lodash: "npm:^4.17.21"
     lru-cache: "npm:^7.14.0"
+    p-limit: "npm:^7.2.0"
     semver: "npm:^7.3.5"
     uuid: "npm:^8.3.2"
-  checksum: 10c0/d69f681d50884080bc9aae3d3f8f73c2e28e7d20bc1e0800f1a5814eb01574015d1132be6ba8e01eab760929561c14d0dc6f0632b904a712d4d74bdd96c74f23
+  checksum: 10c0/1314f4198101b8e6b4be77f2c140b14013a5644d470862f7ee73a3f799b7fb6994fb4fe6edb22b7b9dfe779c04fb3495ce11bbba60c84140e1f9ac3536bd6ee7
   languageName: node
   linkType: hard
 
@@ -3189,6 +3190,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-limit@npm:^7.2.0":
+  version: 7.3.0
+  resolution: "p-limit@npm:7.3.0"
+  dependencies:
+    yocto-queue: "npm:^1.2.1"
+  checksum: 10c0/8030f0ccc67d80d9c12f2b4ed277c5ede151f80a09cb1b143ab0ee597940784f2cf6e07e92d54c023fe9836784329750c25c6cd4488a7a326c0ae0ec2efca982
+  languageName: node
+  linkType: hard
+
 "p-locate@npm:^5.0.0":
   version: 5.0.0
   resolution: "p-locate@npm:5.0.0"
@@ -4601,6 +4611,13 @@ __metadata:
   version: 0.1.0
   resolution: "yocto-queue@npm:0.1.0"
   checksum: 10c0/dceb44c28578b31641e13695d200d34ec4ab3966a5729814d5445b194933c096b7ced71494ce53a0e8820685d1d010df8b2422e5bf2cdea7e469d97ffbea306f
+  languageName: node
+  linkType: hard
+
+"yocto-queue@npm:^1.2.1":
+  version: 1.2.2
+  resolution: "yocto-queue@npm:1.2.2"
+  checksum: 10c0/36d4793e9cf7060f9da543baf67c55e354f4862c8d3d34de1a1b1d7c382d44171315cc54abf84d8900b8113d742b830108a1434f4898fb244f9b7e8426d4b8f5
   languageName: node
   linkType: hard
 

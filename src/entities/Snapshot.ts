@@ -3,7 +3,7 @@ import {
     Column, ManyToOne, JoinColumn
 } from 'typeorm'
 import { OperationHistory } from './OperationHistory.js'
-import { Note, NoteExtended } from 'ableton-js/util/note.js'
+import { Note, NoteExtended } from 'ableton-js/util/note'
 
 export enum SnapshotType {
     NOTE = 'NOTE',

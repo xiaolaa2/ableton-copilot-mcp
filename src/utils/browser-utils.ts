@@ -1,7 +1,7 @@
-import { Browser } from 'ableton-js/ns/browser.js'
+import { Browser } from 'ableton-js/ns/browser'
 import { ableton } from '../ableton.js'
 import { getBrowserItemById } from './obj-utils.js'
-import { BrowserItem } from 'ableton-js/ns/browser-item.js'
+import { BrowserItem } from 'ableton-js/ns/browser-item'
 
 export enum ResourceType {
     AUDIO_EFFECTS = 'audio_effects',

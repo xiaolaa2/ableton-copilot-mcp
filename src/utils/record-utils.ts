@@ -1,5 +1,5 @@
 import { Result } from './common.js'
-import { Song } from 'ableton-js/ns/song.js'
+import { Song } from 'ableton-js/ns/song'
 import { Mutex } from 'async-mutex'
 import { logger } from '../main.js'
 

@@ -55,7 +55,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.2",
     "@types/sql.js": "^1.4.9",
-    "ableton-js": "^3.7.0",
+    "ableton-js": "4.0.4",
     "async-mutex": "^0.5.0",
     "reflect-metadata": "^0.2.2",
     "sql.js": "^1.13.0",

@@ -1,26 +1,47 @@
-import { RawTrack, Track } from 'ableton-js/ns/track.js'
+import { RawTrack, Track } from 'ableton-js/ns/track'
 import {
     ClipGettableProp,
     ClipSettableProp, ClipSlotGettableProperties, DeviceGettableProperties, DeviceParameterGettableProperties, MixerDeviceGettableProp, SceneGettableProperties,
     SongSettableProp, SongViewGettableProps, SongViewSettableProp, TrackGettableProps, TrackSettableProp
 } from '../types/zod-types.js'
 import { z } from 'zod'
-import { Clip, RawClip } from 'ableton-js/ns/clip.js'
-import { Song } from 'ableton-js/ns/song.js'
+import { Clip, RawClip } from 'ableton-js/ns/clip'
+import { Song } from 'ableton-js/ns/song'
 import { ableton } from '../ableton.js'
-import { Namespace } from 'ableton-js/ns/index.js'
-import { DeviceParameter, RawDeviceParameter } from 'ableton-js/ns/device-parameter.js'
-import { Device, DeviceType, RawDevice } from 'ableton-js/ns/device.js'
-import { MixerDevice } from 'ableton-js/ns/mixer-device.js'
+import { Namespace } from 'ableton-js/ns/index'
+import { DeviceParameter, RawDeviceParameter } from 'ableton-js/ns/device-parameter'
+import { Device, DeviceType, RawDevice } from 'ableton-js/ns/device'
+import { MixerDevice } from 'ableton-js/ns/mixer-device'
 import { logger } from '../main.js'
-import { CuePoint } from 'ableton-js/ns/cue-point.js'
-import { Scene } from 'ableton-js/ns/scene.js'
-import { ClipSlot } from 'ableton-js/ns/clip-slot.js'
-import { RawBrowserItem, BrowserItem } from 'ableton-js/ns/browser-item.js'
+import { CuePoint } from 'ableton-js/ns/cue-point'
+import { Scene } from 'ableton-js/ns/scene'
+import { ClipSlot } from 'ableton-js/ns/clip-slot'
+import { RawBrowserItem, BrowserItem } from 'ableton-js/ns/browser-item'
 import { ErrorTypes } from '../mcp/error-handler.js'
 import { getAllNotes } from './clip-utils.js'
-import { Note, NoteExtended } from 'ableton-js/util/note.js'
-import { Application } from 'ableton-js/ns/application.js'
+import { Note, NoteExtended } from 'ableton-js/util/note'
+import { Application } from 'ableton-js/ns/application'
+
+const NOTE_FIELD_ABBREVIATIONS: Record<string, string> = {
+    note_id: 'id',
+    pitch: 'p',
+    start_time: 't',
+    duration: 'd',
+    velocity: 'v',
+    mute: 'm',
+    probability: 'pr',
+    release_velocity: 'rv',
+    velocity_deviation: 'vd'
+}
+
+function abbreviateNoteFields(note: Record<string, any>): Record<string, any> {
+    const result: Record<string, any> = {}
+    for (const [key, value] of Object.entries(note)) {
+        const abbrevKey = NOTE_FIELD_ABBREVIATIONS[key] || key
+        result[abbrevKey] = value
+    }
+    return result
+}
 
 export function modifyObjProps<T extends Namespace<any, any, SP, any>, SP>(
     obj: T,
@@ -166,7 +187,8 @@ export async function getClipProps(
     let notes: any[] = []
     if (scheme.notes) {
         delete scheme.notes
-        notes = await getAllNotes(clip)
+        const rawNotes = await getAllNotes(clip)
+        notes = rawNotes.map(abbreviateNoteFields)
     }
     const res = await getObjProps(clip, scheme)
     return {

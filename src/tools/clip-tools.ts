@@ -1,12 +1,33 @@
 import { tool } from '../mcp/decorators/tool.js'
 import { z } from 'zod'
-import { Note, NoteExtended } from 'ableton-js/util/note.js'
+import { Note, NoteExtended } from 'ableton-js/util/note'
 import { NOTE, ClipSettableProp, ClipGettableProp, NOTE_EXTENED } from '../types/zod-types.js'
 import { batchModifyClipProp, getClipProps, NoteToNoteExtended } from '../utils/obj-utils.js'
 import { Result } from '../utils/common.js'
 import { getClipById } from '../utils/obj-utils.js'
 import { createNoteSnapshot, getNotes, removeNotesExtended, replaceClipNotesExtended } from '../utils/clip-utils.js'
 import { ableton } from '../ableton.js'
+
+const NOTE_FIELD_ABBREVIATIONS: Record<string, string> = {
+    note_id: 'id',
+    pitch: 'p',
+    start_time: 't',
+    duration: 'd',
+    velocity: 'v',
+    mute: 'm',
+    probability: 'pr',
+    release_velocity: 'rv',
+    velocity_deviation: 'vd'
+}
+
+function abbreviateNoteFields(note: Record<string, any>): Record<string, any> {
+    const result: Record<string, any> = {}
+    for (const [key, value] of Object.entries(note)) {
+        const abbrevKey = NOTE_FIELD_ABBREVIATIONS[key] || key
+        result[abbrevKey] = value
+    }
+    return result
+}
 
 class ClipTools {
 
@@ -25,7 +46,18 @@ class ClipTools {
 
     @tool({
         name: 'get_clip_notes',
-        description: 'Get clip notes by clip id. Returns NoteExtended array for Live 11+ and Note array for Live 10 and below',
+        description: `Get clip notes by clip id. Returns NoteExtended array for Live 11+ and Note array for Live 10 and below.
+
+Field abbreviations in returned data:
+- id: note_id
+- p: pitch (MIDI note 0-127, 60=C3)
+- t: start_time (beats)
+- d: duration (beats)
+- v: velocity (0-127)
+- m: mute (boolean)
+- pr: probability (0-1, Live 11+)
+- rv: release_velocity (Live 11+)
+- vd: velocity_deviation (Live 11+)`,
         paramsSchema: {
             clip_id: z.string(),
             from_pitch: z.number().min(0).max(127),
@@ -37,7 +69,8 @@ class ClipTools {
     async getClipNotes({ clip_id, from_pitch, from_time, time_span, pitch_span }: { clip_id: string, from_pitch: number, from_time: number, time_span: number, pitch_span: number }) {
         const clip = getClipById(clip_id)
         const notes = await getNotes(clip, from_pitch, pitch_span, from_time, time_span)
-        return Result.data(notes)
+        const abbreviatedNotes = notes.map(abbreviateNoteFields)
+        return Result.data(abbreviatedNotes)
     }
 
     @tool({
