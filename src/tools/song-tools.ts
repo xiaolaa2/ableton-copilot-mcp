@@ -6,6 +6,7 @@ import { Result } from '../utils/common.js'
 import { getSongProperties, getSongViewProps, modifySongProp, modifySongViewProp } from '../utils/obj-utils.js'
 import { ableton } from '../ableton.js'
 import { recordByTimeRange } from '../utils/record-utils.js'
+import { logger } from '../main.js'
 
 class SongTools {
 
@@ -16,6 +17,43 @@ class SongTools {
     })
     async getSongProperties(propertys: z.infer<typeof SongGettableProps>) {
         return await getSongProperties(ableton.song, propertys)
+    }
+
+    @tool({
+        name: 'get_all_tracks',
+        description: `List all tracks in the current song with their live IDs, names, and types (regular tracks and return
+tracks). Use this to find a track_id when you only know the track name or position, or at the start of a session to build a
+name-to-id map - track ids can change across session saves, so don't rely on a cached id from a previous session.
+Returns each track's name individually rather than via get_song_properties({tracks: true}), which can be slower to fail
+for a single track with an unusual name/state and take the whole list down with it.`,
+        paramsSchema: {}
+    })
+    async getAllTracks() {
+        const tracks = await ableton.song.get('tracks')
+        const returnTracks = await ableton.song.get('return_tracks')
+
+        const results: { index: number | string, id: string, name: string }[] = []
+
+        await Promise.all(tracks.map(async (track, index) => {
+            try {
+                const name = await track.get('name')
+                results[index] = { index, id: track.raw.id, name }
+            } catch (error) {
+                logger.warn(`Failed to get name for track ${track.raw.id}: ${error instanceof Error ? error.message : String(error)}`)
+            }
+        }))
+
+        const returnResults = await Promise.all(returnTracks.map(async (track, index) => {
+            try {
+                const name = await track.get('name')
+                return { index: `return_${index}`, id: track.raw.id, name }
+            } catch (error) {
+                logger.warn(`Failed to get name for return track ${track.raw.id}: ${error instanceof Error ? error.message : String(error)}`)
+                return null
+            }
+        }))
+
+        return [...results.filter(Boolean), ...returnResults.filter((r): r is NonNullable<typeof r> => r !== null)]
     }
 
     @tool({
@@ -103,6 +141,80 @@ class SongTools {
     async duplicateTrack({ index }: { index: number }) {
         await ableton.song.duplicateTrack(index)
         return Result.ok()
+    }
+
+    @tool({
+        name: 'create_cue_point',
+        description: `Create an arrangement locator (cue point) at the given time, optionally renamed. If the song is
+currently playing, playback is paused first and resumed afterwards - jumping the playhead to set a cue while the transport
+is running can drift the actual cue time away from what was requested.`,
+        paramsSchema: {
+            time: commomProp.time,
+            name: z.string().optional().describe('name for the new cue point; leave unset to use the default Live-assigned name'),
+        }
+    })
+    async createCuePoint({ time, name }: { time: number, name?: string }) {
+        const wasPlaying = await ableton.song.get('is_playing')
+        if (wasPlaying) {
+            await ableton.song.set('is_playing', false)
+        }
+
+        const originalTime = await ableton.song.get('current_song_time')
+        try {
+            await ableton.song.set('current_song_time', time)
+            await ableton.song.setOrDeleteCue()
+
+            const cuePoints = await ableton.song.get('cue_points', false)
+            const created = cuePoints.find(c => c.raw.time === time)
+            if (!created) {
+                throw new Error(`Failed to create cue point at time ${time} - it may already exist, or the transport moved before the cue could be set.`)
+            }
+
+            if (name) {
+                await created.set('name', name)
+            }
+
+            return Result.data({ id: created.raw.id, name: name ?? created.raw.name, time })
+        } finally {
+            await ableton.song.set('current_song_time', originalTime)
+            if (wasPlaying) {
+                await ableton.song.set('is_playing', true)
+            }
+        }
+    }
+
+    @tool({
+        name: 'delete_cue_point',
+        description: `Delete an arrangement locator (cue point) by id. If the song is currently playing, playback is
+paused first and resumed afterwards, for the same reason as create_cue_point.`,
+        paramsSchema: {
+            id: z.string().describe('cue point id, get from get_song_properties({cue_points: true}) or create_cue_point'),
+        }
+    })
+    async deleteCuePoint({ id }: { id: string }) {
+        const wasPlaying = await ableton.song.get('is_playing')
+        if (wasPlaying) {
+            await ableton.song.set('is_playing', false)
+        }
+
+        const originalTime = await ableton.song.get('current_song_time')
+        try {
+            const cuePoints = await ableton.song.get('cue_points', false)
+            const target = cuePoints.find(c => c.raw.id === id)
+            if (!target) {
+                throw new Error(`Cue point ${id} not found`)
+            }
+
+            await ableton.song.set('current_song_time', target.raw.time)
+            await ableton.song.setOrDeleteCue()
+
+            return Result.ok()
+        } finally {
+            await ableton.song.set('current_song_time', originalTime)
+            if (wasPlaying) {
+                await ableton.song.set('is_playing', true)
+            }
+        }
     }
 
     @tool({
