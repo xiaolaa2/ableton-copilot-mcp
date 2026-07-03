@@ -1,5 +1,6 @@
 import { RawTrack, Track } from 'ableton-js/ns/track'
 import {
+    ChainGettableProperties, ChainSettableProp, DrumPadGettableProperties, DrumPadSettableProp,
     ClipGettableProp,
     ClipSettableProp, ClipSlotGettableProperties, DeviceGettableProperties, DeviceParameterGettableProperties, MixerDeviceGettableProp, SceneGettableProperties,
     SongSettableProp, SongViewGettableProps, SongViewSettableProp, TrackGettableProps, TrackSettableProp
@@ -11,6 +12,8 @@ import { ableton } from '../ableton.js'
 import { Namespace } from 'ableton-js/ns/index'
 import { DeviceParameter, RawDeviceParameter } from 'ableton-js/ns/device-parameter'
 import { Device, DeviceType, RawDevice } from 'ableton-js/ns/device'
+import { Chain, RawChain } from 'ableton-js/ns/chain'
+import { DrumPad, RawDrumPad } from 'ableton-js/ns/drum-pad'
 import { MixerDevice } from 'ableton-js/ns/mixer-device'
 import { logger } from '../main.js'
 import { CuePoint } from 'ableton-js/ns/cue-point'
@@ -277,10 +280,116 @@ export async function getDeviceProps(
                 props[typedKey] = await Promise.all((value as DeviceParameter[]).map(parameter => {
                     return getDeviceParamterProps(parameter)
                 }))
+            } else if (firstValue instanceof Chain) {
+                props[typedKey] = (value as Chain[]).map(chain => chain.raw)
+            } else if (firstValue instanceof DrumPad) {
+                props[typedKey] = (value as DrumPad[]).map(pad => pad.raw)
+            }
+        } else if (value instanceof Chain) {
+            props[typedKey] = value.raw
+        }
+    }
+    return props
+}
+
+/**
+ * Get raw chain object
+ * @param id Chain ID
+ * @returns Raw chain object
+ */
+export function getRawChainById(id: string): RawChain {
+    if (!id) {
+        throw ErrorTypes.INVALID_ARGUMENT('Chain ID is required')
+    }
+
+    return {
+        id: id,
+        name: '',
+        color: null,
+        mute: false,
+        solo: false,
+    }
+}
+
+export function getChainById(id: string) {
+    const rawChain = getRawChainById(id)
+    return new Chain(ableton, rawChain)
+}
+
+/**
+ * get chain propertys
+ */
+export async function getChainProps(
+    chain: Chain,
+    schema: z.infer<typeof ChainGettableProperties>
+) {
+    const props = await getObjProps(chain, schema)
+    for (const key of Object.keys(props)) {
+        const typedKey = key as keyof typeof props
+        const value = props[typedKey]
+        if (Array.isArray(value) && value.length > 0) {
+            const firstValue = value[0]
+            if (firstValue instanceof Device) {
+                props[typedKey] = (value as Device[]).map(device => device.raw)
+            }
+        } else if (value instanceof MixerDevice) {
+            props[typedKey] = await getMixerDeviceProps(value)
+        }
+    }
+    return props
+}
+
+export function modifyChainProp(chain: Chain, property: z.infer<typeof ChainSettableProp>) {
+    return modifyObjProps(chain, property, ChainSettableProp)
+}
+
+/**
+ * Get raw drum pad object
+ * @param id Drum pad ID
+ * @returns Raw drum pad object
+ */
+export function getRawDrumPadById(id: string): RawDrumPad {
+    if (!id) {
+        throw ErrorTypes.INVALID_ARGUMENT('Drum pad ID is required')
+    }
+
+    return {
+        id: id,
+        name: '',
+        note: null,
+        mute: false,
+        solo: false,
+    }
+}
+
+export function getDrumPadById(id: string) {
+    const rawDrumPad = getRawDrumPadById(id)
+    return new DrumPad(ableton, rawDrumPad)
+}
+
+/**
+ * get drum pad propertys
+ */
+export async function getDrumPadProps(
+    drumPad: DrumPad,
+    schema: z.infer<typeof DrumPadGettableProperties>
+) {
+    const props = await getObjProps(drumPad, schema)
+    for (const key of Object.keys(props)) {
+        const typedKey = key as keyof typeof props
+        const value = props[typedKey]
+        if (Array.isArray(value) && value.length > 0) {
+            const firstValue = value[0]
+            if (firstValue instanceof Chain) {
+                props[typedKey] = (value as Chain[]).map(chain => chain.raw)
             }
         }
     }
     return props
+}
+
+export function modifyDrumPadProp(drumPad: DrumPad, property: z.infer<typeof DrumPadSettableProp>) {
+    return modifyObjProps(drumPad, property, DrumPadSettableProp)
 }
 
 /**
