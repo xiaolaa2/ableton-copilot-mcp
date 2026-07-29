@@ -191,6 +191,65 @@ Field abbreviations in returned data:
     }
 
     @tool({
+        name: 'write_notes_to_clips',
+        description: `Batch-write notes to multiple clips in one call instead of one add_notes_to_clip/replace_clip_notes
+round-trip per clip. mode: 'add' (default) mirrors add_notes_to_clip; mode: 'replace' mirrors replace_clip_notes. Each
+entry is isolated - one bad clip_id or write failure doesn't fail the rest of the batch. Note: unlike the single-clip
+tools, batch writes don't create an undo snapshot per clip.`,
+        paramsSchema: {
+            writes: z.array(z.object({
+                clip_id: z.string(),
+                notes: z.array(NOTE),
+                mode: z.enum(['add', 'replace']).optional().default('add'),
+            }))
+        }
+    })
+    async writeNotesToClips({ writes }: { writes: { clip_id: string, notes: Note[], mode?: 'add' | 'replace' }[] }) {
+        const results = await Promise.all(writes.map(async ({ clip_id, notes, mode = 'add' }) => {
+            try {
+                const clip = getClipById(clip_id)
+                if (mode === 'replace') {
+                    const liveVersion = await ableton.application.get('major_version', true)
+                    if (liveVersion >= 11) {
+                        await replaceClipNotesExtended(clip, notes.map(note => NoteToNoteExtended(note)))
+                    } else {
+                        await clip.selectAllNotes()
+                        await clip.replaceSelectedNotes(notes)
+                    }
+                } else {
+                    await clip.setNotes(notes)
+                }
+                return { clip_id, status: 'ok' as const }
+            } catch (error) {
+                return { clip_id, status: 'error' as const, error: error instanceof Error ? error.message : String(error) }
+            }
+        }))
+        return Result.data(results)
+    }
+
+    @tool({
+        name: 'read_notes_from_clips',
+        description: `Batch-read all notes from multiple clips in one call instead of looping get_clip_notes. Always
+reads the whole clip (no from_pitch/from_time/time_span/pitch_span filtering). Each entry is isolated - one bad clip_id
+doesn't fail the rest of the batch.`,
+        paramsSchema: {
+            clip_ids: z.array(z.string()),
+        }
+    })
+    async readNotesFromClips({ clip_ids }: { clip_ids: string[] }) {
+        const results = await Promise.all(clip_ids.map(async (clip_id) => {
+            try {
+                const clip = getClipById(clip_id)
+                const notes = await getNotes(clip, 0, 128, 0, 99999999999999)
+                return { clip_id, status: 'ok' as const, notes: notes.map(abbreviateNoteFields) }
+            } catch (error) {
+                return { clip_id, status: 'error' as const, error: error instanceof Error ? error.message : String(error) }
+            }
+        }))
+        return Result.data(results)
+    }
+
+    @tool({
         name: 'set_clips_property',
         description: 'batch set clip property',
         paramsSchema: {
