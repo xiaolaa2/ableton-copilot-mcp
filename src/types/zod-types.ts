@@ -4,6 +4,8 @@ import { GettableProperties as SongViewGettablePropsType, SettableProperties as 
 import { RawTrack, SettableProperties as TrackSettablePropType, GettableProperties as TrackGettablePropType } from 'ableton-js/ns/track'
 import { GettableProperties as DeviceGettablePropertiesType } from 'ableton-js/ns/device'
 import { GettableProperties as DeviceParameterGettablePropertiesType } from 'ableton-js/ns/device-parameter'
+import { GettableProperties as ChainGettablePropertiesType, SettableProperties as ChainSettablePropType } from 'ableton-js/ns/chain'
+import { GettableProperties as DrumPadGettablePropertiesType, SettableProperties as DrumPadSettablePropType } from 'ableton-js/ns/drum-pad'
 import { GettableProperties as MixerDeviceGettablePropType } from 'ableton-js/ns/mixer-device'
 import { GettableProperties as ClipGettablePropType } from 'ableton-js/ns/clip'
 import { GettableProperties as SceneGettablePropType } from 'ableton-js/ns/scene'
@@ -385,6 +387,36 @@ export const DeviceGettableProperties = createZodSchema<DeviceGettableProperties
     can_have_chains: z.boolean(),
     can_have_drum_pads: z.boolean(),
     parameters: z.boolean(),
+    chains: z.boolean().describe('[RawChain[]] The chains inside this rack device (Instrument/Audio Effect/MIDI Effect Rack). Empty on devices where can_have_chains is false.'),
+    return_chain: z.boolean().describe("[RawChain] The return chain of this rack device, if it has one (audio effect racks)."),
+    drum_pads: z.boolean().describe('[RawDrumPad[]] The drum pads of this Drum Rack device. Empty on devices where can_have_drum_pads is false.'),
+})
+
+export const ChainGettableProperties = createZodSchema<ChainGettablePropertiesType>({
+    name: z.boolean().describe('[string] The name of the chain'),
+    color: z.boolean().describe('[int|null] The RGB color of the chain'),
+    mute: z.boolean().describe('[boolean] Whether the chain is muted (Chain Activator off)'),
+    solo: z.boolean().describe('[boolean] Whether the chain is soloed, if supported'),
+    devices: z.boolean().describe('[RawDevice[]] The devices inside this chain'),
+    mixer_device: z.boolean().describe('[object] The chain mixer (volume/panning/sends/chain_activator)'),
+})
+
+export const ChainSettableProp = createZodSchema<ChainSettablePropType>({
+    mute: z.boolean().optional().describe('[boolean] Mute/unmute this chain (Chain Activator)'),
+    solo: z.boolean().optional().describe('[boolean] Solo/unsolo this chain, if supported'),
+})
+
+export const DrumPadGettableProperties = createZodSchema<DrumPadGettablePropertiesType>({
+    name: z.boolean().describe('[string] The name of the drum pad'),
+    note: z.boolean().describe('[int|null] The MIDI note number that triggers this pad'),
+    mute: z.boolean().describe('[boolean] Whether the drum pad is muted'),
+    solo: z.boolean().describe('[boolean] Whether the drum pad is soloed'),
+    chains: z.boolean().describe("[RawChain[]] The chain(s) inside this drum pad (usually 0 or 1)"),
+})
+
+export const DrumPadSettableProp = createZodSchema<DrumPadSettablePropType>({
+    mute: z.boolean().optional().describe('[boolean] Mute/unmute this drum pad'),
+    solo: z.boolean().optional().describe('[boolean] Solo/unsolo this drum pad'),
 })
 
 export const DeviceParameterGettableProperties = createZodSchema<DeviceParameterGettablePropertiesType>({
