@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.10.0](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.9.0...v0.10.0) (2026-07-29)
+
+
+### Features
+
+* batch clip note read/write ([9ab7bd3](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/9ab7bd3558e1b85baaff8c8e467ba4a25d960deb))
+* batch clip note read/write ([9dbfb9f](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/9dbfb9f0b2df222dd19899bbe67ba737e14a70e8))
+* get_track_overview, create_clips_batch, track sends ([fe472c4](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/fe472c490c236665db42e8c705af5911a3d168ff))
+* get_track_overview, create_clips_batch, track sends ([d5e3a6b](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/d5e3a6b1ccad18b70f4670867f075b8687ef11ce))
+
+
+### Bug Fixes
+
+* load_device can silently land on the wrong track ([f4d4211](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/f4d42118b930439a6f9d6a0488b47b3798bbdb00))
+* load_device can silently land on the wrong track ([c442b50](https://github.com/xiaolaa2/ableton-copilot-mcp/commit/c442b5034d965cc62a5d115f2ad0a07c47ddcec6))
+
 ## [0.9.0](https://github.com/xiaolaa2/ableton-copilot-mcp/compare/v0.8.0...v0.9.0) (2026-03-14)
 
 
